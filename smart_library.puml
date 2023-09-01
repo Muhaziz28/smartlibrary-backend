@@ -1,0 +1,135 @@
+@startuml smart_library
+
+
+
+entity user {
+    * id Int (PK)
+    --
+    * username String 
+    --
+    * password String
+    --
+    * role Enum (admin, mahasiswa, dosen)
+    --
+    id_jurusan Int (FK)
+}
+
+entity mahasiswa {
+    * nim String (PK)
+    --
+    * nama_lengkap String
+}
+
+entity dosen {
+    * nip String (PK)
+    --
+    * nama_dosen String
+    --
+    * email String
+    --
+    * no_telp String
+}
+
+entity fakultas {
+    * id_fakultas Int (PK)
+    --
+    * nama_fakultas String
+    --
+    singkatan String
+}
+
+entity jurusan {
+    * id_jurusan Int (PK)
+    --
+    * nama_jurusan String
+    --
+    * id_fakultas String (FK)
+}
+
+entity mata_kuliah {
+    * id_mata_kuliah Int (PK)
+    --
+    * kode_mata_kuliah String (Unique)
+    --
+    * nama_mata_kuliah String
+    --
+    * sks Int
+    --
+    * semester Int
+    --
+    * id_jurusan Int (FK)
+    --
+    * nip String (FK)
+}
+
+entity pertemuan_mata_kuliah {
+    * id_pertemuan_mata_kuliah Int (PK)
+    --
+    * id_mata_kuliah Int (FK)
+    --
+    * tanggal_pertemuan Date
+    --
+    * topik String
+}
+
+entity mata_kuliah_diambil {
+    * id_mata_kuliah_diambil Int (PK)
+    --
+    * nim String (FK)
+    --
+    * status_persetujuan Enum (pending, disetujui, ditolak)
+}
+
+entity mata_kuliah_mahasiswa {
+    * id_mata_kuliah_mahasiswa Int (PK)
+    --
+    * id_mata_kuliah Int (FK)
+    --
+    * nim String (FK)
+    --
+    * nilai Int
+    --
+    * semeser Int
+}
+
+entity qr_code {
+    * id_qr_code Int (PK)
+    --
+    * id_pertemuan_mata_kuliah Int (FK)
+    --
+    * id_mata_kuliah_diambil Int (FK)
+    --
+    * qr_code String
+    --
+    * waktu_aktivasi DateTime
+}
+
+entity absensi {
+    * id_absensi Int (PK)
+    --
+    * id_qr_code Int (FK)
+    --
+    * nim String (FK)
+    --
+    * status Enum (hadir, tidak_hadir)
+    --
+    * waktu_absensi DateTime
+}
+
+mahasiswa ||--|{ jurusan
+fakultas ||--|{ jurusan
+user ||--o{ mahasiswa
+user ||--o{ dosen
+user ||--o{ jurusan
+mata_kuliah ||--o{ jurusan
+mata_kuliah ||--o{ dosen
+mata_kuliah_diambil ||--o{ mata_kuliah
+mata_kuliah_diambil ||--o{ mahasiswa
+mata_kuliah_mahasiswa ||--o{ mata_kuliah
+mata_kuliah_mahasiswa ||--o{ mahasiswa
+pertemuan_mata_kuliah ||--o{ mata_kuliah
+pertemuan_mata_kuliah ||--o{ qr_code
+mata_kuliah_diambil ||--o{ qr_code
+qr_code ||--o| absensi
+
+@enduml
