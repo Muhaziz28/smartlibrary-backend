@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { MahasiswaDto } from './dto';
+import { MahasiswaDto, UpdateMahasiswaDto } from './dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 @Injectable()
@@ -41,6 +41,9 @@ export class MahasiswaService {
             const total = await this.prisma.mahasiswa.count({
                 where: { OR: [{ nim: { contains: search } }, { nama: { contains: search } }] }
             });
+            if (!mahasiswa.length) {
+                throw new ForbiddenException('Data tidak ditemukan');
+            }
             return {
                 data: mahasiswa,
                 total,
@@ -64,6 +67,44 @@ export class MahasiswaService {
             return mahasiswa;
         }
         catch (error) {
+            throw error;
+        }
+    }
+
+    async updateMahasiswa(nim: string, dto: UpdateMahasiswaDto) {
+        try {
+            const mahasiswa = await this.prisma.mahasiswa.findUnique({
+                where: { nim }
+            })
+            if (!mahasiswa) { throw new ForbiddenException('NIM tidak ditemukan'); }
+
+            const updateMahasiswa = await this.prisma.mahasiswa.update({
+                where: { nim },
+                data: {
+                    nama: dto.nama,
+                    email: dto.email,
+                    usernameTelegram: dto.usernameTelegram,
+                    noTelp: dto.noTelp
+                }
+            })
+            return updateMahasiswa;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async deleteMahasiswa(nim: string) {
+        try {
+            const mahasiswa = await this.prisma.mahasiswa.findUnique({
+                where: { nim }
+            })
+            if (!mahasiswa) { throw new ForbiddenException('NIM tidak ditemukan'); }
+
+            const deleteMahasiswa = await this.prisma.mahasiswa.delete({
+                where: { nim }
+            })
+            return deleteMahasiswa;
+        } catch (error) {
             throw error;
         }
     }

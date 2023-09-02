@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { MahasiswaService } from './mahasiswa.service';
-import { MahasiswaDto } from './dto';
+import { MahasiswaDto, UpdateMahasiswaDto } from './dto';
 
 @Controller('mahasiswa')
 export class MahasiswaController {
@@ -26,5 +26,15 @@ export class MahasiswaController {
     @Get(':nim')
     async getMahasiswaByNim(@Param('nim') nim: string) {
         return await this.mahasiswaService.getMahasiswaByNim(nim);
+    }
+
+    @Put(':nim')
+    async updateMahasiswa(@Param('nim') nim: string, @Body() dto: UpdateMahasiswaDto) {
+        return await this.mahasiswaService.updateMahasiswa(nim, dto);
+    }
+
+    @Delete(':nim')
+    async deleteMahasiswa(@Param('nim') nim: string) {
+        return await this.mahasiswaService.deleteMahasiswa(nim);
     }
 }
