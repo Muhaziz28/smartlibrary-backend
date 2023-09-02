@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { MahasiswaDto, UpdateMahasiswaDto } from './dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
@@ -9,6 +9,11 @@ export class MahasiswaService {
 
     async addMahasiswa(dto: MahasiswaDto) {
         try {
+            const checkMahasiswa = await this.prisma.mahasiswa.findUnique({
+                where: { nim: dto.nim }
+            });
+            if (checkMahasiswa) { throw new ConflictException('NIM sudah terdaftar'); }
+
             const mahasiswa = await this.prisma.mahasiswa.create({
                 data: {
                     nim: dto.nim,
@@ -23,7 +28,7 @@ export class MahasiswaService {
         catch (error) {
             if (error instanceof PrismaClientKnownRequestError) {
                 if (error.code === 'P2002') {
-                    throw new ForbiddenException('NIM sudah terdaftar');
+                    throw new ConflictException('NIM sudah terdaftar');
                 }
             }
             throw error;
@@ -42,7 +47,7 @@ export class MahasiswaService {
                 where: { OR: [{ nim: { contains: search } }, { nama: { contains: search } }] }
             });
             if (!mahasiswa.length) {
-                throw new ForbiddenException('Data tidak ditemukan');
+                throw new NotFoundException('Data tidak ditemukan');
             }
             return {
                 data: mahasiswa,
@@ -62,7 +67,7 @@ export class MahasiswaService {
                 where: { nim }
             });
 
-            if (!mahasiswa) { throw new ForbiddenException('NIM tidak ditemukan'); }
+            if (!mahasiswa) { throw new NotFoundException('NIM tidak ditemukan'); }
 
             return mahasiswa;
         }
@@ -76,7 +81,7 @@ export class MahasiswaService {
             const mahasiswa = await this.prisma.mahasiswa.findUnique({
                 where: { nim }
             })
-            if (!mahasiswa) { throw new ForbiddenException('NIM tidak ditemukan'); }
+            if (!mahasiswa) { throw new NotFoundException('NIM tidak ditemukan'); }
 
             const updateMahasiswa = await this.prisma.mahasiswa.update({
                 where: { nim },
@@ -95,10 +100,8 @@ export class MahasiswaService {
 
     async deleteMahasiswa(nim: string) {
         try {
-            const mahasiswa = await this.prisma.mahasiswa.findUnique({
-                where: { nim }
-            })
-            if (!mahasiswa) { throw new ForbiddenException('NIM tidak ditemukan'); }
+            const mahasiswa = await this.prisma.mahasiswa.findUnique({ where: { nim } })
+            if (!mahasiswa) { throw new NotFoundException('NIM tidak ditemukan'); }
 
             const deleteMahasiswa = await this.prisma.mahasiswa.delete({
                 where: { nim }

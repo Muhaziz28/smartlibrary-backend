@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { ConflictException, ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateFakultasDto } from './dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
@@ -14,8 +14,7 @@ export class FakultasService {
             const checkFakultas = await this.prisma.fakultas.findUnique({
                 where: { namaFakultas: dto.namaFakultas }
             });
-            if (checkFakultas) { throw new ForbiddenException('Nama Fakultas sudah terdaftar'); }
-
+            if (checkFakultas) { throw new ConflictException('Nama Fakultas sudah terdaftar'); }
 
             const fakultas = await this.prisma.fakultas.create({
                 data: {
@@ -37,6 +36,9 @@ export class FakultasService {
             const { search = '' } = params;
             const fakultas = await this.prisma.fakultas.findMany({
                 where: { OR: [{ namaFakultas: { contains: search } }, { singkatan: { contains: search } }] },
+                include: {
+                    Prodi: true
+                }
             });
             if (!fakultas.length) { throw new ForbiddenException('Data tidak ditemukan'); }
             return fakultas

@@ -55,15 +55,18 @@ model Fakultas {
   namaFakultas String  @unique @map("nama_fakultas")
   singkatan    String? @unique
   Dosen        Dosen[]
+  Prodi        Prodi[]
 
   @@map("fakultas")
 }
 
 model Prodi {
-  id        Int         @id @default(autoincrement())
-  namaProdi String      @unique @map("nama_prodi")
-  singkatan String?     @unique
-  Mahasiswa Mahasiswa[]
+  id         Int         @id @default(autoincrement())
+  namaProdi  String      @unique @map("nama_prodi")
+  singkatan  String?     @unique
+  fakultas   Fakultas    @relation(fields: [fakultasId], references: [id])
+  fakultasId Int         @map("fakultas_id")
+  Mahasiswa  Mahasiswa[]
 
   @@map("prodi")
 }
