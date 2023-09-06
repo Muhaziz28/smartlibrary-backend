@@ -72,3 +72,12 @@ model Prodi {
 
   @@map("prodi")
 }
+
+model Periode {
+  id       Int     @id @default(autoincrement())
+  mulai    String
+  selesai  String
+  isActive Boolean @default(false) @map("is_active")
+
+  @@map("periode")
+}

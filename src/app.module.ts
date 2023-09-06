@@ -8,13 +8,14 @@ import { FakultasModule } from './fakultas/fakultas.module';
 import { ProdiModule } from './prodi/prodi.module';
 import { UserController } from './user/user.controller';
 import { UserModule } from './user/user.module';
+import { PeriodeModule } from './periode/periode.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    AuthModule, MahasiswaModule, DosenModule, PrismaModule, FakultasModule, ProdiModule, UserModule],
+    AuthModule, MahasiswaModule, DosenModule, PrismaModule, FakultasModule, ProdiModule, UserModule, PeriodeModule],
   controllers: [UserController],
   providers: [],
 })
