@@ -29,11 +29,12 @@ enum Role {
 }
 
 model User {
-  id        Int    @id @default(autoincrement())
-  username  String @unique
-  password  String
-  role      Role
-  jurusanId Int?   @map("jurusan_id")
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  password String
+  role     Role
+  prodi    Prodi? @relation(fields: [prodiId], references: [id])
+  prodiId  Int?   @map("prodi_id")
 
   @@map("users")
 }
@@ -67,6 +68,7 @@ model Prodi {
   fakultas   Fakultas    @relation(fields: [fakultasId], references: [id])
   fakultasId Int         @map("fakultas_id")
   Mahasiswa  Mahasiswa[]
+  User       User[]
 
   @@map("prodi")
 }

@@ -2,6 +2,7 @@ import { ConflictException, ForbiddenException, Injectable, NotFoundException } 
 import { PrismaService } from 'src/prisma/prisma.service';
 import { MahasiswaDto, UpdateMahasiswaDto } from './dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { parse } from 'path';
 
 @Injectable()
 export class MahasiswaService {
@@ -38,10 +39,11 @@ export class MahasiswaService {
     async getAllMahasiswa(params: { page?: number, limit?: number, search?: string }) {
         try {
             const { page = 1, limit = 10, search = '' } = params;
+            const parseLimit = parseInt(limit.toString());
             const mahasiswa = await this.prisma.mahasiswa.findMany({
                 where: { OR: [{ nim: { contains: search } }, { nama: { contains: search } }] },
                 skip: (page - 1) * limit,
-                take: limit
+                take: parseLimit,
             });
             const total = await this.prisma.mahasiswa.count({
                 where: { OR: [{ nim: { contains: search } }, { nama: { contains: search } }] }
@@ -106,6 +108,11 @@ export class MahasiswaService {
             const deleteMahasiswa = await this.prisma.mahasiswa.delete({
                 where: { nim }
             })
+
+            const userMahasiswa = await this.prisma.user.delete({
+                where: { username: nim }
+            })
+
             return deleteMahasiswa;
         } catch (error) {
             throw error;

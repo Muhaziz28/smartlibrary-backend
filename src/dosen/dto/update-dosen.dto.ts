@@ -1,9 +1,6 @@
 import { IsEmail, IsInt, IsOptional, IsString } from "class-validator";
 
-export class CreateDosenDto {
-    @IsString()
-    nip: string;
-
+export class UpdateDosenDto {
     @IsString()
     nama: string;
 

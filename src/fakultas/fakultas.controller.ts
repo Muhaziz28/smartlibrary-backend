@@ -1,35 +1,50 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { FakultasService } from './fakultas.service';
 import { CreateFakultasDto } from './dto';
 import { UpdateFakultasDto } from './dto/update-fakultas.dto';
+import { RolesGuard } from 'src/role.guard';
+import { JwtGuard } from 'src/auth/guard';
+import { Roles } from 'src/role.decorator';
+import { Role } from '@prisma/client';
 
+@UseGuards(JwtGuard, RolesGuard)
 @Controller('fakultas')
 export class FakultasController {
     constructor(private fakultasService: FakultasService) { }
 
+    // Menambahkan data fakultas hanya boleh diakses oleh ADMIN
+    @Roles(Role.ADMIN)
     @Post()
-    async addFakultas(@Body() dto: CreateFakultasDto) {
-        return await this.fakultasService.addFakultas(dto);
+    addFakultas(@Body() dto: CreateFakultasDto) {
+        return this.fakultasService.addFakultas(dto);
     }
 
+    // Mendapatkan data fakultas hanya boleh diakses oleh ADMIN
+    @Roles(Role.ADMIN)
     @Get()
-    async getFakultas(@Query() params: { search?: string }) {
-        return await this.fakultasService.getFakultas(params);
+    getFakultas(@Query() params: { search?: string }) {
+        return this.fakultasService.getFakultas(params);
     }
 
+    // Mendapatkan data fakultas berdasarkan ID hanya boleh diakses oleh ADMIN
+    @Roles(Role.ADMIN)
     @Get(':id')
-    async getFakultasById(@Param('id', ParseIntPipe) id: number) {
-        return await this.fakultasService.getFakultasById(id);
+    getFakultasById(@Param('id', ParseIntPipe) id: number) {
+        return this.fakultasService.getFakultasById(id);
     }
 
+    // Mengubah data fakultas hanya boleh diakses oleh ADMIN
+    @Roles(Role.ADMIN)
     @Put(':id')
-    async updateFakultas(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateFakultasDto) {
+    updateFakultas(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateFakultasDto) {
         console.log(typeof id);
-        return await this.fakultasService.updateFakultas(id, dto);
+        return this.fakultasService.updateFakultas(id, dto);
     }
 
+    // Menghapus data fakultas hanya boleh diakses oleh ADMIN
+    @Roles(Role.ADMIN)
     @Delete(':id')
-    async deleteFakultas(@Param('id', ParseIntPipe) id: number) {
-        return await this.fakultasService.deleteFakultas(id);
+    deleteFakultas(@Param('id', ParseIntPipe) id: number) {
+        return this.fakultasService.deleteFakultas(id);
     }
 }

@@ -1,34 +1,49 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { ProdiService } from './prodi.service';
 import { CreateProdiDto } from './dto/create-prodi.dto';
 import { UpdateProdiDto } from './dto/update-prodi.dto';
+import { JwtGuard } from 'src/auth/guard';
+import { RolesGuard } from 'src/role.guard';
+import { Roles } from 'src/role.decorator';
+import { Role } from '@prisma/client';
 
+@UseGuards(JwtGuard, RolesGuard)
 @Controller('prodi')
 export class ProdiController {
     constructor(private prodiService: ProdiService) { }
 
+    // Menambahkan data prodi hanya boleh diakses oleh ADMIN
+    @Roles(Role.ADMIN)
     @Post()
-    async addProdi(@Body() dto: CreateProdiDto) {
-        return await this.prodiService.addProdi(dto);
+    addProdi(@Body() dto: CreateProdiDto) {
+        return this.prodiService.addProdi(dto);
     }
 
+    // Mengubah data prodi hanya boleh diakses oleh ADMIN
+    @Roles(Role.ADMIN)
     @Put(':id')
-    async updateProdi(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateProdiDto) {
-        return await this.prodiService.updateProdi({ id }, dto);
+    updateProdi(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateProdiDto) {
+        return this.prodiService.updateProdi({ id }, dto);
     }
 
+    // Mendapatkan data prodi hanya boleh diakses oleh ADMIN
+    @Roles(Role.ADMIN)
     @Get()
-    async getProdi(@Query() params: { search?: string }) {
-        return await this.prodiService.getProdi(params);
+    getProdi(@Query() params: { search?: string }) {
+        return this.prodiService.getProdi(params);
     }
 
+    // Mendapatkan data prodi berdasarkan ID hanya boleh diakses oleh ADMIN
+    @Roles(Role.ADMIN)
     @Get(':id')
-    async getProdiById(@Param('id', ParseIntPipe) id: number) {
-        return await this.prodiService.getProdiById(id);
+    getProdiById(@Param('id', ParseIntPipe) id: number) {
+        return this.prodiService.getProdiById(id);
     }
 
+    // Menghapus data prodi hanya boleh diakses oleh ADMIN
+    @Roles(Role.ADMIN)
     @Delete(':id')
-    async deleteProdi(@Param('id', ParseIntPipe) id: number) {
-        return await this.prodiService.deleteProdi(id);
+    deleteProdi(@Param('id', ParseIntPipe) id: number) {
+        return this.prodiService.deleteProdi(id);
     }
 }

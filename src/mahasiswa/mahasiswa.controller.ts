@@ -1,40 +1,54 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { MahasiswaService } from './mahasiswa.service';
 import { MahasiswaDto, UpdateMahasiswaDto } from './dto';
+import { JwtGuard } from 'src/auth/guard';
+import { Roles } from 'src/role.decorator';
+import { Role } from '@prisma/client';
+import { RolesGuard } from 'src/role.guard';
 
+@UseGuards(JwtGuard, RolesGuard)
 @Controller('mahasiswa')
 export class MahasiswaController {
     constructor(private mahasiswaService: MahasiswaService) { }
 
+    // Menambahkan data mahasiswa hanya boleh diakses oleh ADMIN
+    @Roles(Role.ADMIN)
     @Post()
-    async addMahasiswa(@Body() dto: MahasiswaDto) {
-        return await this.mahasiswaService.addMahasiswa(dto);
+    addMahasiswa(@Body() dto: MahasiswaDto) {
+        return this.mahasiswaService.addMahasiswa(dto);
     }
 
+    // Mendapatkan data mahasiswa hanya boleh diakses oleh ADMIN
+    @Roles(Role.ADMIN)
     @Get()
-    async getMahasiswa(@Query() params: { page?: number, limit?: number, search?: string }) {
+    getMahasiswa(@Query() params: { page?: number, limit?: number, search?: string }) {
         try {
-            const mahasiswa = await this.mahasiswaService.getAllMahasiswa(params);
+            const mahasiswa = this.mahasiswaService.getAllMahasiswa(params);
             return mahasiswa;
         } catch (err) {
             console.log(err);
             throw err;
         }
-
     }
 
+    // Mendapatkan data mahasiswa berdasarkan NIM hanya boleh diakses oleh ADMIN
+    @Roles(Role.ADMIN)
     @Get(':nim')
-    async getMahasiswaByNim(@Param('nim') nim: string) {
-        return await this.mahasiswaService.getMahasiswaByNim(nim);
+    getMahasiswaByNim(@Param('nim') nim: string) {
+        return this.mahasiswaService.getMahasiswaByNim(nim);
     }
 
+    // Mengubah data mahasiswa hanya boleh diakses oleh ADMIN
+    @Roles(Role.ADMIN)
     @Put(':nim')
-    async updateMahasiswa(@Param('nim') nim: string, @Body() dto: UpdateMahasiswaDto) {
-        return await this.mahasiswaService.updateMahasiswa(nim, dto);
+    updateMahasiswa(@Param('nim') nim: string, @Body() dto: UpdateMahasiswaDto) {
+        return this.mahasiswaService.updateMahasiswa(nim, dto);
     }
 
+    // Menghapus data mahasiswa hanya boleh diakses oleh ADMIN
+    @Roles(Role.ADMIN)
     @Delete(':nim')
-    async deleteMahasiswa(@Param('nim') nim: string) {
-        return await this.mahasiswaService.deleteMahasiswa(nim);
+    deleteMahasiswa(@Param('nim') nim: string) {
+        return this.mahasiswaService.deleteMahasiswa(nim);
     }
 }
