@@ -52,17 +52,25 @@ export class AuthService {
             const user = await this.prisma.user.findUnique({
                 where: { username: dto.username }
             })
-            console.log(LoginDto);
+
+            // Jika data user tidak ditemukan
             if (!user) {
                 throw new ForbiddenException("Username atau password salah")
             }
 
+            // Jika password tidak cocok
             const isPasswordMatch = await argon.verify(user.password, dto.password);
             if (!isPasswordMatch) {
                 throw new ForbiddenException("Username atau password salah")
             }
 
-            return this.singToken(user.id, user.username, user.role);
+            const token = await this.singToken(user.id, user.username, user.role);
+            // Password tidak disertakan pada response
+            delete user.password;
+
+            return {
+                ...token, user: user,
+            }
         }
         catch (error) {
             throw error;
