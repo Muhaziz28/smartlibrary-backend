@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreatePeriodeDto } from './dto';
+import { CreatePeriodeDto, UpdatePeriodeDto } from './dto';
 
 @Injectable()
 export class PeriodeService {
@@ -51,6 +51,27 @@ export class PeriodeService {
             })
 
             return periode;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async updatePeriode(id: number, dto: UpdatePeriodeDto) {
+        try {
+            const periode = await this.prisma.periode.findUnique({
+                where: { id: id }
+            })
+            if (!periode) { throw new NotFoundException('Periode tidak ditemukan'); }
+
+            const updatePeriode = await this.prisma.periode.update({
+                where: { id: id },
+                data: {
+                    mulai: dto.mulai,
+                    selesai: dto.selesai,
+                }
+            })
+
+            return updatePeriode;
         } catch (error) {
             throw error;
         }

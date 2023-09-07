@@ -62,13 +62,14 @@ model Fakultas {
 }
 
 model Prodi {
-  id         Int         @id @default(autoincrement())
-  namaProdi  String      @unique @map("nama_prodi")
-  singkatan  String?     @unique
-  fakultas   Fakultas    @relation(fields: [fakultasId], references: [id])
-  fakultasId Int         @map("fakultas_id")
+  id         Int          @id @default(autoincrement())
+  namaProdi  String       @unique @map("nama_prodi")
+  singkatan  String?      @unique
+  fakultas   Fakultas     @relation(fields: [fakultasId], references: [id])
+  fakultasId Int          @map("fakultas_id")
   Mahasiswa  Mahasiswa[]
   User       User[]
+  MataKuliah MataKuliah[]
 
   @@map("prodi")
 }
@@ -80,4 +81,15 @@ model Periode {
   isActive Boolean @default(false) @map("is_active")
 
   @@map("periode")
+}
+
+model MataKuliah {
+  id             Int    @id @default(autoincrement())
+  namaMataKuliah String @map("nama_mata_kuliah")
+  kodeMataKuliah String @unique @map("kode_mata_kuliah")
+  sks            Int
+  prodi          Prodi  @relation(fields: [prodiId], references: [id])
+  prodiId        Int    @map("prodi_id")
+
+  @@map("mata_kuliah")
 }
