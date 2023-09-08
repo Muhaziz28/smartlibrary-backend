@@ -102,4 +102,6 @@ model PeriodeMataKuliah {
   periodeId    Int        @map("periode_id")
   mataKuliah   MataKuliah @relation(fields: [mataKuliahId], references: [id])
   mataKuliahId Int        @map("mata_kuliah_id")
+
+  @@map("periode_mata_kuliah")
 }

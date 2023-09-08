@@ -12,13 +12,14 @@ import { PeriodeModule } from './periode/periode.module';
 import { AdminModule } from './admin/admin.module';
 import { MataKuliahModule } from './mata-kuliah/mata-kuliah.module';
 import { SesiMataKuliahModule } from './sesi-mata-kuliah/sesi-mata-kuliah.module';
+import { PeriodeMataKuliahModule } from './periode-mata-kuliah/periode-mata-kuliah.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    AuthModule, MahasiswaModule, DosenModule, PrismaModule, FakultasModule, ProdiModule, UserModule, PeriodeModule, AdminModule, MataKuliahModule, SesiMataKuliahModule],
+    AuthModule, MahasiswaModule, DosenModule, PrismaModule, FakultasModule, ProdiModule, UserModule, PeriodeModule, AdminModule, MataKuliahModule, SesiMataKuliahModule, PeriodeMataKuliahModule],
   controllers: [UserController],
   providers: [],
 })
