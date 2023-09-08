@@ -75,21 +75,31 @@ model Prodi {
 }
 
 model Periode {
-  id       Int     @id @default(autoincrement())
-  mulai    String
-  selesai  String
-  isActive Boolean @default(false) @map("is_active")
+  id                Int                 @id @default(autoincrement())
+  mulai             String
+  selesai           String
+  isActive          Boolean             @default(false) @map("is_active")
+  PeriodeMataKuliah PeriodeMataKuliah[]
 
   @@map("periode")
 }
 
 model MataKuliah {
-  id             Int    @id @default(autoincrement())
-  namaMataKuliah String @map("nama_mata_kuliah")
-  kodeMataKuliah String @map("kode_mata_kuliah")
-  sks            Int
-  prodi          Prodi  @relation(fields: [prodiId], references: [id])
-  prodiId        Int    @map("prodi_id")
+  id                Int                 @id @default(autoincrement())
+  namaMataKuliah    String              @map("nama_mata_kuliah")
+  kodeMataKuliah    String              @map("kode_mata_kuliah")
+  sks               Int
+  prodi             Prodi               @relation(fields: [prodiId], references: [id])
+  prodiId           Int                 @map("prodi_id")
+  PeriodeMataKuliah PeriodeMataKuliah[]
 
   @@map("mata_kuliah")
+}
+
+model PeriodeMataKuliah {
+  id           Int        @id @default(autoincrement())
+  periode      Periode    @relation(fields: [periodeId], references: [id])
+  periodeId    Int        @map("periode_id")
+  mataKuliah   MataKuliah @relation(fields: [mataKuliahId], references: [id])
+  mataKuliahId Int        @map("mata_kuliah_id")
 }
