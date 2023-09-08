@@ -86,7 +86,7 @@ model Periode {
 model MataKuliah {
   id             Int    @id @default(autoincrement())
   namaMataKuliah String @map("nama_mata_kuliah")
-  kodeMataKuliah String @unique @map("kode_mata_kuliah")
+  kodeMataKuliah String @map("kode_mata_kuliah")
   sks            Int
   prodi          Prodi  @relation(fields: [prodiId], references: [id])
   prodiId        Int    @map("prodi_id")

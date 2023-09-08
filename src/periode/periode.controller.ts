@@ -12,7 +12,7 @@ export class PeriodeController {
     constructor(private periodeService: PeriodeService) { }
 
     // Mengambil data periode hanya boleh diakses oleh admin
-    @Roles(Role.ADMIN)
+    // @Roles(Role.ADMIN)
     @Get()
     getPeriode(@Query() params: { page?: number, limit?: number, search?: string }) {
         try {

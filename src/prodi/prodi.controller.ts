@@ -26,8 +26,7 @@ export class ProdiController {
         return this.prodiService.updateProdi({ id }, dto);
     }
 
-    // Mendapatkan data prodi hanya boleh diakses oleh ADMIN
-    @Roles(Role.ADMIN)
+    // Mendapatkan data prodi hanya boleh diakses oleh semua role
     @Get()
     getProdi(@Query() params: { search?: string }) {
         return this.prodiService.getProdi(params);

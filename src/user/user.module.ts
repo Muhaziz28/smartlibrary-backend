@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
 
-@Module({})
-export class UserModule {}
+@Module({
+  providers: []
+})
+export class UserModule { }

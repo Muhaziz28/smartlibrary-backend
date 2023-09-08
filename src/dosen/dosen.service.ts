@@ -49,6 +49,7 @@ export class DosenService {
 
     async addDosen(dto: CreateDosenDto) {
         try {
+            console.log('dto => ', dto)
             const dosen = await this.prisma.dosen.create({
                 data: {
                     nip: dto.nip,

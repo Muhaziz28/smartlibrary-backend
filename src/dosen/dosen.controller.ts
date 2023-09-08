@@ -20,6 +20,7 @@ export class DosenController {
 
     @Post()
     addDosen(@Body() dto: CreateDosenDto) {
+        console.log(dto)
         return this.dosenService.addDosen(dto);
     }
 
