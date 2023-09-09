@@ -8,7 +8,7 @@ export class PeriodeMataKuliahController {
     constructor(private periodeMataKuliahService: PeriodeMataKuliahService) { }
 
     @Get()
-    getMataKuliahPeriode(@Query() query: { periodeId: number }) {
+    getMataKuliahPeriode(@Query() query: { periodeId: number, page?: number, limit?: number, search?: string }) {
         return this.periodeMataKuliahService.getMataKuliahPeriode(query);
     }
 
