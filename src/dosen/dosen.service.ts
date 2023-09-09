@@ -49,7 +49,21 @@ export class DosenService {
 
     async addDosen(dto: CreateDosenDto) {
         try {
-            console.log('dto => ', dto)
+            const nipDosen = await this.prisma.dosen.findUnique({
+                where: { nip: dto.nip }
+            })
+            if (nipDosen) { throw new ForbiddenException('NIP sudah terdaftar'); }
+
+            const emailDosen = await this.prisma.dosen.findUnique({
+                where: { email: dto.email }
+            })
+            if (emailDosen) { throw new ForbiddenException('Email sudah terdaftar'); }
+
+            const noTelpDosen = await this.prisma.dosen.findUnique({
+                where: { noTelp: dto.noTelp }
+            })
+            if (noTelpDosen) { throw new ForbiddenException('No Telp sudah terdaftar'); }
+
             const dosen = await this.prisma.dosen.create({
                 data: {
                     nip: dto.nip,
@@ -63,11 +77,7 @@ export class DosenService {
             return dosen;
         }
         catch (error) {
-            if (error instanceof PrismaClientKnownRequestError) {
-                if (error.code === 'P2002') {
-                    throw new ForbiddenException('NIP sudah terdaftar');
-                }
-            }
+
             throw error;
         }
     }
