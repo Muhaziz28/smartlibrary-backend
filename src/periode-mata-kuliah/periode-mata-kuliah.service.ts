@@ -16,7 +16,6 @@ export class PeriodeMataKuliahService {
             const periodeAktif = await this.prisma.periode.findFirst({
                 where: { isActive: true },
             })
-
             if (!periodeAktif) throw new NotFoundException('Tidak ada periode aktif')
 
             let mataKuliahPeriode: any;
@@ -94,6 +93,23 @@ export class PeriodeMataKuliahService {
             })
 
             return mataKuliahPeriode;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async removeMataKuliahPeriode(id: number) {
+        try {
+            const periodeMataKuliah = await this.prisma.periodeMataKuliah.findUnique({
+                where: { id },
+            })
+            if (!periodeMataKuliah) throw new NotFoundException('Mata kuliah periode tidak ditemukan')
+
+            const deletedPeriodeMataKuliah = await this.prisma.periodeMataKuliah.delete({
+                where: { id },
+            })
+
+            return deletedPeriodeMataKuliah;
         } catch (error) {
             throw error;
         }
