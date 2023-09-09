@@ -40,13 +40,14 @@ model User {
 }
 
 model Dosen {
-  nip              String   @id
-  nama             String   @unique
-  email            String   @unique
-  usernameTelegram String?  @unique @map("username_telegram")
-  noTelp           String?  @unique @map("no_telp")
-  fakultas         Fakultas @relation(fields: [fakultasId], references: [id])
-  fakultasId       Int      @map("fakultas_id")
+  nip              String           @id
+  nama             String           @unique
+  email            String           @unique
+  usernameTelegram String?          @unique @map("username_telegram")
+  noTelp           String?          @unique @map("no_telp")
+  fakultas         Fakultas         @relation(fields: [fakultasId], references: [id])
+  fakultasId       Int              @map("fakultas_id")
+  SesiMataKuliah   SesiMataKuliah[]
 
   @@map("dosen")
 }
@@ -97,11 +98,24 @@ model MataKuliah {
 }
 
 model PeriodeMataKuliah {
-  id           Int        @id @default(autoincrement())
-  periode      Periode    @relation(fields: [periodeId], references: [id])
-  periodeId    Int        @map("periode_id")
-  mataKuliah   MataKuliah @relation(fields: [mataKuliahId], references: [id])
-  mataKuliahId Int        @map("mata_kuliah_id")
+  id             Int              @id @default(autoincrement())
+  periode        Periode          @relation(fields: [periodeId], references: [id])
+  periodeId      Int              @map("periode_id")
+  mataKuliah     MataKuliah       @relation(fields: [mataKuliahId], references: [id])
+  mataKuliahId   Int              @map("mata_kuliah_id")
+  SesiMataKuliah SesiMataKuliah[]
 
   @@map("periode_mata_kuliah")
+}
+
+model SesiMataKuliah {
+  id                  Int               @id @default(autoincrement())
+  periodeMataKuliah   PeriodeMataKuliah @relation(fields: [periodeMataKuliahId], references: [id])
+  periodeMataKuliahId Int               @map("periode_mata_kuliah_id")
+  kodeSesi            String            @map("kode_sesi")
+  jadwal              String
+  dosen               Dosen             @relation(fields: [nip], references: [nip])
+  nip                 String
+
+  @@map("sesi_mata_kuliah")
 }
