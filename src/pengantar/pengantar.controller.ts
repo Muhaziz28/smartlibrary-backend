@@ -22,7 +22,10 @@ export class PengantarController {
                 const fileExtName = file.originalname.split('.')[1];
                 callback(null, `${name}-${Date.now()}.${fileExtName}`);
             },
-        })
+        }),
+        limits: {
+            fileSize: 10 * 1024 * 1024, // 10MB
+        }
     }))
     addPengantar(@UploadedFile() file?: Express.Multer.File, @Body() addPengantarDto?: AddPengantarDto) {
         let sesiMataKuliahId: number;

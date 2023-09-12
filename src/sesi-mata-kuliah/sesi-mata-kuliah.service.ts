@@ -44,9 +44,6 @@ export class SesiMataKuliahService {
         }
     }
 
-
-
-
     async addSesiMataKuliah(dto: AddSesiMataKuliahDto) {
         try {
             const periodeMataKuliah = await this.prisma.periodeMataKuliah.findUnique({
