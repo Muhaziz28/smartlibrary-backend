@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { SesiMataKuliahService } from './sesi-mata-kuliah.service';
 import { AddSesiMataKuliahDto } from './dto';
 import { JwtGuard } from 'src/auth/guard';
@@ -12,8 +12,8 @@ export class SesiMataKuliahController {
     constructor(private sesiMataKuliahService: SesiMataKuliahService) { }
 
     @Get()
-    getSesiMataKuliah(@Query() query: { search?: string }) {
-        return this.sesiMataKuliahService.getSesiMataKuliah(query);
+    getSesiMataKuliah(@Query() query: { search?: string }, @Req() req: any) {
+        return this.sesiMataKuliahService.getSesiMataKuliah(query, req);
     }
 
     @Roles(Role.ADMIN)
