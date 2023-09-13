@@ -64,8 +64,6 @@ export class SesiMataKuliahService {
             });
 
             const response = sesiMataKuliah.map((sesi) => {
-
-
                 // Mengubah properti file dalam Pengantar
                 sesi.periodeMataKuliah.SesiMataKuliah.forEach((periode) => {
                     periode.Pengantar.forEach((sesiMataKuliahItem) => {
@@ -79,6 +77,36 @@ export class SesiMataKuliahService {
             });
 
             return response;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async getSesiMataKuliahById(id: number, req: any) {
+        try {
+            const sesiMataKuliah = await this.prisma.sesiMataKuliah.findUnique({
+                where: { id },
+                include: {
+                    periodeMataKuliah: {
+                        include: {
+                            SesiMataKuliah: {
+                                include: { Pengantar: true, Pertemuan: true }
+                            },
+                            mataKuliah: { include: { prodi: true } }
+                        }
+                    },
+                    dosen: { include: { fakultas: true } }
+                }
+            });
+
+            // Mengubah properti file dalam Pengantar
+            sesiMataKuliah.periodeMataKuliah.SesiMataKuliah.forEach((periode) => {
+                periode.Pengantar.forEach((sesiMataKuliahItem) => {
+                    sesiMataKuliahItem.file = `http://${req.headers.host}/public/pengantar/${sesiMataKuliahItem.file}`;
+                });
+            });
+
+            return sesiMataKuliah;
         } catch (error) {
             throw error;
         }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { SesiMataKuliahService } from './sesi-mata-kuliah.service';
 import { AddSesiMataKuliahDto } from './dto';
 import { JwtGuard } from 'src/auth/guard';
@@ -20,6 +20,11 @@ export class SesiMataKuliahController {
     @Get('dosen')
     getSesiMataKuliahDosen(@Query() query: { search?: string }, @Req() req: any, @GetUser() user: User) {
         return this.sesiMataKuliahService.getSesiMataKuliahDosen(query, req, user);
+    }
+
+    @Get('sesi/:id')
+    getSesiMataKuliahById(@Param('id', ParseIntPipe) id: number, @Req() req: any) {
+        return this.sesiMataKuliahService.getSesiMataKuliahById(id, req);
     }
 
     @Roles(Role.ADMIN)
