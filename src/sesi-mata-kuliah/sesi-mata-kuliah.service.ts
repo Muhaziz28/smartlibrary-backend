@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AddSesiMataKuliahDto } from './dto';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class SesiMataKuliahService {
@@ -10,6 +11,45 @@ export class SesiMataKuliahService {
         try {
             const sesiMataKuliah = await this.prisma.sesiMataKuliah.findMany({
                 where: { kodeSesi: { contains: query.search } },
+                include: {
+                    periodeMataKuliah: {
+                        include: {
+                            SesiMataKuliah: {
+                                include: { Pengantar: true, Pertemuan: true }
+                            },
+                            mataKuliah: { include: { prodi: true } }
+                        }
+                    },
+                    dosen: { include: { fakultas: true } }
+                }
+            });
+
+            const response = sesiMataKuliah.map((sesi) => {
+
+
+                // Mengubah properti file dalam Pengantar
+                sesi.periodeMataKuliah.SesiMataKuliah.forEach((periode) => {
+                    periode.Pengantar.forEach((sesiMataKuliahItem) => {
+                        sesiMataKuliahItem.file = `http://${req.headers.host}/public/pengantar/${sesiMataKuliahItem.file}`;
+                    });
+                });
+
+                return {
+                    ...sesi,
+                };
+            });
+
+            return response;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async getSesiMataKuliahDosen(query: { search?: string }, req: any, user: User) {
+        console.log(user.username);
+        try {
+            const sesiMataKuliah = await this.prisma.sesiMataKuliah.findMany({
+                where: { kodeSesi: { contains: query.search }, nip: user.username },
                 include: {
                     periodeMataKuliah: {
                         include: {
