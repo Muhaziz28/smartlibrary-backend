@@ -1,8 +1,9 @@
-import { ConflictException, ForbiddenException, Injectable } from '@nestjs/common';
+import { ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateFakultasDto } from './dto';
+import { CreateFakultasDto, CreateProdiFakultasDto } from './dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { UpdateFakultasDto } from './dto/update-fakultas.dto';
+import { CreateProdiDto } from 'src/prodi/dto/create-prodi.dto';
 
 @Injectable()
 export class FakultasService {
@@ -91,6 +92,45 @@ export class FakultasService {
             return fakultas;
         }
         catch (error) {
+            throw error;
+        }
+    }
+
+    async addProdiByFakultasId(id: number, dto: CreateProdiFakultasDto) {
+        try {
+            const checkProdi = await this.prisma.prodi.findFirst({
+                where: { namaProdi: dto.namaProdi, fakultasId: id }
+            })
+            if (checkProdi) { throw new ConflictException('Nama Prodi sudah terdaftar'); }
+
+            const prodi = await this.prisma.prodi.create({
+                data: {
+                    namaProdi: dto.namaProdi,
+                    singkatan: dto.singkatan,
+                    fakultasId: id
+                }
+            })
+            return prodi;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async getProdiByFakultasId(query: { search?: string }, id: number) {
+        try {
+            const { search = '' } = query;
+            const fakultas = await this.prisma.fakultas.findUnique({
+                where: { id: id },
+                include: {
+                    Prodi: {
+                        where: { OR: [{ namaProdi: { contains: search } }, { singkatan: { contains: search } }] },
+                    }
+                }
+            });
+
+            if (!fakultas) { throw new NotFoundException('Fakultas tidak ditemukan'); }
+            return fakultas.Prodi;
+        } catch (error) {
             throw error;
         }
     }

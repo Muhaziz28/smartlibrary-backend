@@ -1,7 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AddPengantarDto } from './dto';
 import * as path from 'path';
+import * as fs from 'fs';
 
 @Injectable()
 export class PengantarService {
@@ -48,20 +49,16 @@ export class PengantarService {
             }
 
             // Get data pengantar
-            const pengantar = await this.prisma.pengantar.findMany({
+            const pengantar = await this.prisma.pengantar.findFirst({
                 where: { sesiMataKuliahId: id },
             });
 
-            if (!pengantar || pengantar.length === 0) {
-                throw new NotFoundException('Pengantar tidak ditemukan');
+            if (!pengantar) throw new NotFoundException('Pengantar tidak ditemukan');
+
+            if (pengantar.file) {
+                pengantar.file = `http://${req.headers.host}/public/pengantar/${pengantar.file}`;
             }
 
-            // Access folder pengantar and update file paths
-            pengantar.forEach((pengantarItem) => {
-                if (pengantarItem.file) {
-                    pengantarItem.file = `http://${req.headers.host}/public/pengantar/${pengantarItem.file}`;
-                }
-            });
 
             return pengantar;
         } catch (error) {
@@ -75,6 +72,13 @@ export class PengantarService {
                 where: { id },
             })
             if (!pengantar) throw new NotFoundException('Pengantar tidak ditemukan');
+
+            if (pengantar.file) {
+                const filePath = path.join(__dirname, '..', '..', 'public', 'pengantar', pengantar.file);
+                fs.unlink(filePath, (err) => {
+                    if (err) throw err;
+                });
+            }
 
             const updatedPengantar = await this.prisma.pengantar.update({
                 where: { id },

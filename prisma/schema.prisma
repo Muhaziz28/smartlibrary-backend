@@ -116,8 +116,8 @@ model SesiMataKuliah {
   jadwal              String
   dosen               Dosen             @relation(fields: [nip], references: [nip])
   nip                 String
-  Pengantar           Pengantar[]
-  Rps                 Rps[]
+  Pengantar           Pengantar?
+  Rps                 Rps?
   Pertemuan           Pertemuan[]
 
   @@map("sesi_mata_kuliah")
@@ -126,7 +126,7 @@ model SesiMataKuliah {
 model Pengantar {
   id               Int            @id @default(autoincrement())
   sesiMataKuliah   SesiMataKuliah @relation(fields: [sesiMataKuliahId], references: [id])
-  sesiMataKuliahId Int            @map("sesi_mata_kuliah_id")
+  sesiMataKuliahId Int            @unique @map("sesi_mata_kuliah_id")
   file             String?
   link             String?
   deskripsi        String?
@@ -137,7 +137,7 @@ model Pengantar {
 model Rps {
   id               Int            @id @default(autoincrement())
   sesiMataKuliah   SesiMataKuliah @relation(fields: [sesiMataKuliahId], references: [id])
-  sesiMataKuliahId Int            @map("sesi_mata_kuliah_id")
+  sesiMataKuliahId Int            @unique @map("sesi_mata_kuliah_id")
   file             String?
   link             String?
   deskripsi        String?

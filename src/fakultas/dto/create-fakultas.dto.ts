@@ -8,3 +8,12 @@ export class CreateFakultasDto {
     @IsOptional()
     singkatan: string;
 }
+
+export class CreateProdiFakultasDto {
+    @IsString()
+    namaProdi: string;
+
+    @IsString()
+    @IsOptional()
+    singkatan: string;
+}

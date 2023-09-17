@@ -1,11 +1,12 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { FakultasService } from './fakultas.service';
-import { CreateFakultasDto } from './dto';
+import { CreateFakultasDto, CreateProdiFakultasDto } from './dto';
 import { UpdateFakultasDto } from './dto/update-fakultas.dto';
 import { RolesGuard } from 'src/role.guard';
 import { JwtGuard } from 'src/auth/guard';
 import { Roles } from 'src/role.decorator';
 import { Role } from '@prisma/client';
+import { CreateProdiDto } from 'src/prodi/dto/create-prodi.dto';
 
 @UseGuards(JwtGuard, RolesGuard)
 @Controller('fakultas')
@@ -47,4 +48,20 @@ export class FakultasController {
     deleteFakultas(@Param('id', ParseIntPipe) id: number) {
         return this.fakultasService.deleteFakultas(id);
     }
+
+    // Menambahkan data prodi hanya boleh diakses oleh ADMIN
+    @Roles(Role.ADMIN)
+    @Post('/:id/prodi')
+    addProdi(@Param('id', ParseIntPipe) id: number, @Body() dto: CreateProdiFakultasDto) {
+        return this.fakultasService.addProdiByFakultasId(id, dto);
+    }
+
+    // Mendapatkan data prodi berdasarkan ID fakultas hanya boleh diakses oleh ADMIN
+    @Roles(Role.ADMIN)
+    @Get(':id/prodi')
+    getProdiByFakultasId(@Param('id', ParseIntPipe) id: number, @Query() params: { search?: string }) {
+        console.log(typeof id);
+        return this.fakultasService.getProdiByFakultasId(params, id);
+    }
+
 }
