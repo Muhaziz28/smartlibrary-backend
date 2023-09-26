@@ -41,7 +41,7 @@ model User {
 
 model Dosen {
   nip              String           @id
-  nama             String           @unique
+  nama             String
   email            String           @unique
   usernameTelegram String?          @unique @map("username_telegram")
   noTelp           String?          @unique @map("no_telp")

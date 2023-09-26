@@ -2,6 +2,8 @@ import { ForbiddenException, Injectable, NotFoundException, ParseIntPipe } from 
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateDosenDto, UpdateDosenDto } from './dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import * as argon from "argon2";
+import { Role } from '@prisma/client';
 
 @Injectable()
 export class DosenService {
@@ -64,6 +66,11 @@ export class DosenService {
             })
             if (noTelpDosen) { throw new ForbiddenException('No Telp sudah terdaftar'); }
 
+            const fakultas = await this.prisma.fakultas.findUnique({
+                where: { id: dto.fakultasId }
+            })
+            if (!fakultas) { throw new NotFoundException('Fakultas tidak ditemukan'); }
+
             const dosen = await this.prisma.dosen.create({
                 data: {
                     nip: dto.nip,
@@ -74,10 +81,26 @@ export class DosenService {
                     fakultasId: dto.fakultasId
                 }
             });
+
+            const hashPassword = await argon.hash(dto.nip);
+
+            await this.prisma.user.create({
+                data: {
+                    username: dto.nip,
+                    password: hashPassword,
+                    role: Role.DOSEN,
+                    prodiId: null,
+                }
+            })
+
             return dosen;
         }
         catch (error) {
-
+            if (error instanceof PrismaClientKnownRequestError) {
+                if (error.code === 'P2002') {
+                    throw new ForbiddenException('NIP sudah terdaftar');
+                }
+            }
             throw error;
         }
     }
