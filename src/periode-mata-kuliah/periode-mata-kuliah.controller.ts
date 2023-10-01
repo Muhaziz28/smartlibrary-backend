@@ -28,4 +28,10 @@ export class PeriodeMataKuliahController {
     deletePeriodeMataKuliah(@Param('id', ParseIntPipe) id: number) {
         return this.periodeMataKuliahService.removeMataKuliahPeriode(id);
     }
+
+    @Roles(Role.ADMIN)
+    @Get('list-mata-kuliah')
+    getListMataKuliahPeriode() {
+        return this.periodeMataKuliahService.getListMataKuliahPeriode();
+    }
 }
