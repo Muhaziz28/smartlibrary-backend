@@ -1,0 +1,482 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2580
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset77 ZapfDingbatsITC;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 Last login: Tue Sep 12 15:15:46 on ttys007\
+\uc0\u61817  \uc0\u61461  ~ 
+\f1 \uc0\u10095 
+\f0  ssh smartlibrary@103.189.234.220\
+ssh: connect to host 103.189.234.220 port 22: Operation timed out\
+\
+\uc0\u61817  \uc0\u61461  ~ 
+\f1 \uc0\u10095 
+\f0  ssh smartlibrary@103.189.234.220                             
+\f1 \uc0\u10008 
+\f0  255 \uc0\u62034  8s\
+ssh: connect to host 103.189.234.220 port 22: Connection refused\
+\
+\uc0\u61817  \uc0\u61461  ~ 
+\f1 \uc0\u10095 
+\f0  ssh smartlibrary@103.189.234.220                                  
+\f1 \uc0\u10008 
+\f0  255\
+smartlibrary@103.189.234.220's password:\
+Permission denied, please try again.\
+smartlibrary@103.189.234.220's password:\
+Welcome to Ubuntu 22.04.2 LTS (GNU/Linux 5.15.0-75-generic x86_64)\
+\
+ * Panduan:  https://idcloudhost.com/panduan\
+ -------------------------------------------\
+ * Documentation:  https://help.ubuntu.com\
+ * Management:     https://landscape.canonical.com\
+ * Support:        https://ubuntu.com/advantage\
+\
+  System information as of Tue Sep 12 08:20:12 UTC 2023\
+\
+  System load:  0.59814453125     Processes:             124\
+  Usage of /:   9.9% of 19.20GB   Users logged in:       0\
+  Memory usage: 11%               IPv4 address for ens3: 10.44.254.57\
+  Swap usage:   0%\
+\
+\
+Expanded Security Maintenance for Applications is not enabled.\
+\
+43 updates can be applied immediately.\
+42 of these updates are standard security updates.\
+To see these additional updates run: apt list --upgradable\
+\
+Enable ESM Apps to receive additional future security updates.\
+See https://ubuntu.com/esm or run: sudo pro status\
+\
+\
+Last login: Tue Sep 12 08:15:53 2023 from 103.141.74.10\
+smartlibrary@SmartLibrary:~$ sudo mkdir -p /etc/apt/keyrings\
+smartlibrary@SmartLibrary:~$ curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg\
+smartlibrary@SmartLibrary:~$ NODE_MAJOR=18\
+smartlibrary@SmartLibrary:~$ echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list\
+deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_18.x nodistro main\
+smartlibrary@SmartLibrary:~$ sudo apt-get update\
+Hit:1 http://mirrors.idcloudhost.com/ubuntu jammy InRelease\
+Hit:2 http://mirrors.idcloudhost.com/ubuntu jammy-updates InRelease\
+Hit:3 http://mirrors.idcloudhost.com/ubuntu jammy-backports InRelease\
+Get:4 https://deb.nodesource.com/node_18.x nodistro InRelease [12.1 kB]\
+Get:5 https://deb.nodesource.com/node_18.x nodistro/main amd64 Packages [5181 B]\
+Hit:6 http://security.ubuntu.com/ubuntu jammy-security InRelease\
+Fetched 17.3 kB in 1s (20.2 kB/s)\
+Reading package lists... Done\
+smartlibrary@SmartLibrary:~$ sudo apt-get install nodejs -y\
+Reading package lists... Done\
+Building dependency tree... Done\
+Reading state information... Done\
+You might want to run 'apt --fix-broken install' to correct these.\
+The following packages have unmet dependencies:\
+ nodejs : Conflicts: nodejs-doc\
+E: Unmet dependencies. Try 'apt --fix-broken install' with no packages (or specify a solution).\
+smartlibrary@SmartLibrary:~$ sudo apt --fix-broken install\
+Reading package lists... Done\
+Building dependency tree... Done\
+Reading state information... Done\
+Correcting dependencies... Done\
+The following packages were automatically installed and are no longer required:\
+  javascript-common libc-ares2 libjs-highlight.js\
+Use 'sudo apt autoremove' to remove them.\
+The following additional packages will be installed:\
+  nodejs\
+The following packages will be REMOVED:\
+  nodejs-doc\
+The following packages will be upgraded:\
+  nodejs\
+1 upgraded, 0 newly installed, 1 to remove and 39 not upgraded.\
+1 not fully installed or removed.\
+Need to get 29.4 MB of archives.\
+After this operation, 178 MB of additional disk space will be used.\
+Do you want to continue? [Y/n] Y\
+Get:1 https://deb.nodesource.com/node_18.x nodistro/main amd64 nodejs amd64 18.17.1-1nodesource1 [29.4 MB]\
+Fetched 29.4 MB in 1s (26.3 MB/s)\
+(Reading database ... 66575 files and directories currently installed.)\
+Removing nodejs-doc (12.22.9~dfsg-1ubuntu3) ...\
+(Reading database ... 66396 files and directories currently installed.)\
+Preparing to unpack .../nodejs_18.17.1-1nodesource1_amd64.deb ...\
+Unpacking nodejs (18.17.1-1nodesource1) over (12.22.9~dfsg-1ubuntu3) ...\
+Setting up nodejs (18.17.1-1nodesource1) ...\
+Processing triggers for man-db (2.10.2-1) ...\
+Scanning processes...\
+Scanning linux images...\
+\
+Running kernel seems to be up-to-date.\
+\
+No services need to be restarted.\
+\
+No containers need to be restarted.\
+\
+No user sessions are running outdated binaries.\
+\
+No VM guests are running outdated hypervisor (qemu) binaries on this host.\
+smartlibrary@SmartLibrary:~$ node -v\
+v18.17.1\
+smartlibrary@SmartLibrary:~$ npm -v\
+9.6.7\
+smartlibrary@SmartLibrary:~$ sudo su\
+root@SmartLibrary:/home/smartlibrary# ls\
+root@SmartLibrary:/home/smartlibrary# cd ..\
+root@SmartLibrary:/home# cd ..\
+root@SmartLibrary:/# ls\
+bin   dev  home  lib32  libx32      media  opt   root  sbin  srv  tmp  var\
+boot  etc  lib   lib64  lost+found  mnt    proc  run   snap  sys  usr\
+root@SmartLibrary:/# cd var/\
+root@SmartLibrary:/var# ls\
+backups  crash  local  log   opt  smartlibrary-backend  spool\
+" ============================================================================\
+" Netrw Directory Listing                                        (netrw v171)\
+"   /var/smartlibrary-backend\
+"   Sorted by      name\
+"   Sort sequence: [\\/]$,\\<core\\%(\\.\\d\\+\\)\\=\\>,\\.h$,\\.c$,\\.cpp$,\\~\\=\\*$,*,\\.o$,\\\
+"   Quick Help: <F1>:help  -:go up dir  D:delete  R:rename  s:sort-by  x:special\
+" ==============================================================================\
+../\
+./\
+.git/\
+node_modules/\
+prisma/\
+public/\
+src/\
+test/\
+.env\
+" ============================================================================\
+" Netrw Directory Listing                                        (netrw v171)\
+"   /var/smartlibrary-backend\
+"   Sorted by      name\
+"   Sort sequence: [\\/]$,\\<core\\%(\\.\\d\\+\\)\\=\\>,\\.h$,\\.c$,\\.cpp$,\\~\\=\\*$,*,\\.o$,\\.obj$,\\.info$,\\.swp$,\\.bak$,\\~$\
+"   Quick Help: <F1>:help  -:go up dir  D:delete  R:rename  s:sort-by  x:special\
+" ==============================================================================\
+../\
+./\
+.git/\
+node_modules/\
+prisma/\
+public/\
+src/\
+test/\
+.env\
+.eslintrc.js\
+.gitignore\
+.prettierrc\
+README.md\
+docker-compose.yml\
+nest-cli.json\
+package.json\
+smart_library.puml\
+tsconfig.build.json\
+tsconfig.json\
+yarn.lock\
+~\
+~\
+~\
+~\
+~\
+~\
+~\
+~\
+~\
+~\
+~\
+~\
+~\
+"." is a directory                                                                                                                          8,1           All\
+# Environment variables declared in this file are automatically made available to Prisma.\
+.eslintrc.js\
+.gitignore\
+.prettierrc\
+README.md\
+docker-compose.yml\
+nest-cli.json\
+package.json\
+smart_library.puml\
+"." is a directory                                            8,1           Top\
+" ============================================================================\
+" Netrw Directory Listing                                        (netrw v171)\
+"   /var/smartlibrary-backend\
+"   Sorted by      name\
+"   Sort sequence: [\\/]$,\\<core\\%(\\.\\d\\+\\)\\=\\>,\\.h$,\\.c$,\\.cpp$,\\~\\=\\*$,*,\\.o$,\\.obj$,\\.info$,\\.swp$,\\.bak$,\\~$\
+"   Quick Help: <F1>:help  -:go up dir  D:delete  R:rename  s:sort-by  x:special\
+" ==============================================================================\
+../\
+./\
+.git/\
+node_modules/\
+prisma/\
+public/\
+src/\
+test/\
+.env\
+.eslintrc.js\
+.gitignore\
+.prettierrc\
+README.md\
+docker-compose.yml\
+nest-cli.json\
+package.json\
+smart_library.puml\
+tsconfig.build.json\
+tsconfig.json\
+yarn.lock\
+~\
+~\
+~\
+~\
+~\
+~\
+~\
+~\
+~\
+~\
+~\
+~\
+~\
+"." is a directory                                                                                                                          8,1           All\
+# Environment variables declared in this file are automatically made available to Prisma.\
+# Environment variables declared in this file are automatically made available tcache    lib    lock   mail  run  snap                  tmp\
+root@SmartLibrary:/var# cd smartlibrary-backend/\
+root@SmartLibrary:/var/smartlibrary-backend# yarn\
+Command 'yarn' not found, but can be installed with:\
+apt install cmdtest\
+root@SmartLibrary:/var/smartlibrary-backend# npm install --global yarn\
+\
+added 1 package in 1s\
+npm notice\
+" ============================================================================\
+" Netrw Directory Listing                                        (netrw v171)\
+"   /var/smartlibrary-backend\
+"   Sorted by      name\
+"   Sort sequence: [\\/]$,\\<core\\%(\\.\\d\\+\\)\\=\\>,\\.h$,\\.c$,\\.cpp$,\\~\\=\\*$,*,\\.o$,\\.obj$,\\.info$,\\.swp$,\\.bak$,\\~$\
+"   Quick Help: <F1>:help  -:go up dir  D:delete  R:rename  s:sort-by  x:special\
+" ==============================================================================\
+../\
+./\
+.git/\
+node_modules/\
+prisma/\
+public/\
+src/\
+test/\
+.env\
+.eslintrc.js\
+.gitignore\
+.prettierrc\
+README.md\
+docker-compose.yml\
+nest-cli.json\
+package.json\
+smart_library.puml\
+tsconfig.build.json\
+tsconfig.json\
+yarn.lock\
+~\
+~\
+~\
+~\
+~\
+~\
+~\
+~\
+~\
+~\
+~\
+~\
+~\
+"." is a directory                                                                                                                          8,1           All\
+# Environment variables declared in this file are automatically made available to Prisma.\
+npm notice New major version of npm available! 9.6.7 -> 10.1.0\
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v10.1.0\
+npm notice Run npm install -g npm@10.1.0 to update!\
+npm notice\
+root@SmartLibrary:/var/smartlibrary-backend# yarn\
+yarn install v1.22.19\
+[1/4] Resolving packages...\
+[2/4] Fetching packages...\
+[3/4] Linking dependencies...\
+warning " > ts-loader@9.4.4" has unmet peer dependency "webpack@^5.0.0".\
+[4/4] Building fresh packages...\
+Done in 79.18s.\
+root@SmartLibrary:/var/smartlibrary-backend# vim .\
+root@SmartLibrary:/var/smartlibrary-backend# npx prisma migrate dev\
+Environment variables loaded from .env\
+Prisma schema loaded from prisma/schema.prisma\
+Datasource "db": PostgreSQL database "smart-library", schema "public" at "localhost:5432"\
+\
+Error: P1000: Authentication failed against database server at `localhost`, the provided database credentials for `smartlibrary` are not valid.\
+\
+Please make sure to provide valid database credentials for the database server at `localhost`.\
+root@SmartLibrary:/var/smartlibrary-backend# vim .\
+root@SmartLibrary:/var/smartlibrary-backend# npx prisma migrate dev\
+Environment variables loaded from .env\
+Prisma schema loaded from prisma/schema.prisma\
+Datasource "db": PostgreSQL database "smart-library", schema "public" at "103.189.234.220:5432"\
+\
+Error: P1000: Authentication failed against database server at `103.189.234.220`, the provided database credentials for `smartlibrary` are not valid.\
+\
+Please make sure to provide valid database credentials for the database server at `103.189.234.220`.\
+root@SmartLibrary:/var/smartlibrary-backend# vim .\
+root@SmartLibrary:/var/smartlibrary-backend# npx prisma migrate dev\
+Environment variables loaded from .env\
+Prisma schema loaded from prisma/schema.prisma\
+Datasource "db": PostgreSQL database "smart-library", schema "public" at "103.189.234.220:5432"\
+\
+Error: P1000: Authentication failed against database server at `103.189.234.220`, the provided database credentials for `smartlibrary` are not valid.\
+\
+Please make sure to provide valid database credentials for the database server at `103.189.234.220`.\
+root@SmartLibrary:/var/smartlibrary-backend# vim .\
+root@SmartLibrary:/var/smartlibrary-backend# npx prisma migrate dev\
+Environment variables loaded from .env\
+Prisma schema loaded from prisma/schema.prisma\
+Datasource "db": PostgreSQL database "smart-library", schema "public" at "103.189.234.220:5432"\
+\
+Applying migration `20230831143733_mahasiswa_table`\
+Applying migration `20230901050016_fakultas_and_jurusan_table`\
+Applying migration `20230901231155_dosen_table`\
+Applying migration `20230901231314_nip_is_string`\
+Applying migration `20230902013104_change_table_name`\
+Applying migration `20230902030455_prodi_table`\
+Applying migration `20230902031100_new_structur`\
+Applying migration `20230902032142_fakultas_id`\
+Applying migration `20230902155812_remove_jurusan_add_prodi_to_users`\
+Applying migration `20230906151811_periode_table`\
+Applying migration `20230907002258_table_mata_kuliah_and_relasi_ke_prodi`\
+Applying migration `20230908124418_kode_mata_kuliah`\
+Applying migration `20230908140529_periode_mata_kuliah`\
+Applying migration `20230909041117_sesi_mata_kuliah_table`\
+Applying migration `20230909134929_pengantar_table`\
+Applying migration `20230909135011_pengantar_map`\
+Applying migration `20230910141452_rps_table`\
+Applying migration `20230911161210_pertemuan`\
+Applying migration `20230911161234_map_pertemuan`\
+\
+The following migration(s) have been applied:\
+\
+migrations/\
+  \uc0\u9492 \u9472  20230831143733_mahasiswa_table/\
+    \uc0\u9492 \u9472  migration.sql\
+  \uc0\u9492 \u9472  20230901050016_fakultas_and_jurusan_table/\
+    \uc0\u9492 \u9472  migration.sql\
+  \uc0\u9492 \u9472  20230901231155_dosen_table/\
+    \uc0\u9492 \u9472  migration.sql\
+  \uc0\u9492 \u9472  20230901231314_nip_is_string/\
+    \uc0\u9492 \u9472  migration.sql\
+  \uc0\u9492 \u9472  20230902013104_change_table_name/\
+    \uc0\u9492 \u9472  migration.sql\
+  \uc0\u9492 \u9472  20230902030455_prodi_table/\
+    \uc0\u9492 \u9472  migration.sql\
+  \uc0\u9492 \u9472  20230902031100_new_structur/\
+    \uc0\u9492 \u9472  migration.sql\
+  \uc0\u9492 \u9472  20230902032142_fakultas_id/\
+    \uc0\u9492 \u9472  migration.sql\
+  \uc0\u9492 \u9472  20230902155812_remove_jurusan_add_prodi_to_users/\
+    \uc0\u9492 \u9472  migration.sql\
+  \uc0\u9492 \u9472  20230906151811_periode_table/\
+    \uc0\u9492 \u9472  migration.sql\
+  \uc0\u9492 \u9472  20230907002258_table_mata_kuliah_and_relasi_ke_prodi/\
+    \uc0\u9492 \u9472  migration.sql\
+  \uc0\u9492 \u9472  20230908124418_kode_mata_kuliah/\
+    \uc0\u9492 \u9472  migration.sql\
+  \uc0\u9492 \u9472  20230908140529_periode_mata_kuliah/\
+    \uc0\u9492 \u9472  migration.sql\
+  \uc0\u9492 \u9472  20230909041117_sesi_mata_kuliah_table/\
+    \uc0\u9492 \u9472  migration.sql\
+  \uc0\u9492 \u9472  20230909134929_pengantar_table/\
+    \uc0\u9492 \u9472  migration.sql\
+  \uc0\u9492 \u9472  20230909135011_pengantar_map/\
+    \uc0\u9492 \u9472  migration.sql\
+  \uc0\u9492 \u9472  20230910141452_rps_table/\
+    \uc0\u9492 \u9472  migration.sql\
+  \uc0\u9492 \u9472  20230911161210_pertemuan/\
+    \uc0\u9492 \u9472  migration.sql\
+  \uc0\u9492 \u9472  20230911161234_map_pertemuan/\
+    \uc0\u9492 \u9472  migration.sql\
+\
+Your database is now in sync with your schema.\
+\
+
+\f1 \uc0\u10004 
+\f0  Generated Prisma Client (v5.2.0) to ./node_modules/@prisma/client in 397ms\
+\
+\
+root@SmartLibrary:/var/smartlibrary-backend# yarn build\
+yarn run v1.22.19\
+$ nest build\
+Done in 8.24s.\
+root@SmartLibrary:/var/smartlibrary-backend# yarn start:prod\
+yarn run v1.22.19\
+$ node dist/main\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [NestFactory] Starting Nest application...\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [InstanceLoader] UserModule dependencies initialized +35ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [InstanceLoader] JwtModule dependencies initialized +1ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [InstanceLoader] ConfigHostModule dependencies initialized +1ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [InstanceLoader] ConfigModule dependencies initialized +0ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [InstanceLoader] PrismaModule dependencies initialized +12ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [InstanceLoader] AppModule dependencies initialized +3ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [InstanceLoader] AdminModule dependencies initialized +3ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [InstanceLoader] AuthModule dependencies initialized +0ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [InstanceLoader] PengantarModule dependencies initialized +1ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [InstanceLoader] MahasiswaModule dependencies initialized +1ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [InstanceLoader] DosenModule dependencies initialized +0ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [InstanceLoader] FakultasModule dependencies initialized +0ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [InstanceLoader] ProdiModule dependencies initialized +0ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [InstanceLoader] PeriodeModule dependencies initialized +1ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [InstanceLoader] MataKuliahModule dependencies initialized +0ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [InstanceLoader] SesiMataKuliahModule dependencies initialized +0ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [InstanceLoader] PeriodeMataKuliahModule dependencies initialized +1ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RoutesResolver] UserController \{/user\}: +29ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RouterExplorer] Mapped \{/user/me, GET\} route +5ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RoutesResolver] AuthController \{/auth\}: +0ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RouterExplorer] Mapped \{/auth/signup, POST\} route +1ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RouterExplorer] Mapped \{/auth/login, POST\} route +1ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RoutesResolver] MahasiswaController \{/mahasiswa\}: +0ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RouterExplorer] Mapped \{/mahasiswa, POST\} route +1ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RouterExplorer] Mapped \{/mahasiswa, GET\} route +0ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RouterExplorer] Mapped \{/mahasiswa/:nim, GET\} route +1ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RouterExplorer] Mapped \{/mahasiswa/:nim, PUT\} route +1ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RouterExplorer] Mapped \{/mahasiswa/:nim, DELETE\} route +1ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RoutesResolver] DosenController \{/dosen\}: +0ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RouterExplorer] Mapped \{/dosen, GET\} route +1ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RouterExplorer] Mapped \{/dosen/:nip, GET\} route +1ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RouterExplorer] Mapped \{/dosen, POST\} route +0ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RouterExplorer] Mapped \{/dosen/:nip, PUT\} route +1ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RouterExplorer] Mapped \{/dosen/:nip, DELETE\} route +0ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RoutesResolver] FakultasController \{/fakultas\}: +1ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RouterExplorer] Mapped \{/fakultas, POST\} route +0ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RouterExplorer] Mapped \{/fakultas, GET\} route +0ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RouterExplorer] Mapped \{/fakultas/:id, GET\} route +1ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RouterExplorer] Mapped \{/fakultas/:id, PUT\} route +0ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RouterExplorer] Mapped \{/fakultas/:id, DELETE\} route +1ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RoutesResolver] ProdiController \{/prodi\}: +0ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RouterExplorer] Mapped \{/prodi, POST\} route +1ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RouterExplorer] Mapped \{/prodi/:id, PUT\} route +0ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RouterExplorer] Mapped \{/prodi, GET\} route +1ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RouterExplorer] Mapped \{/prodi/:id, GET\} route +0ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RouterExplorer] Mapped \{/prodi/:id, DELETE\} route +1ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RoutesResolver] PeriodeController \{/periode\}: +0ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RouterExplorer] Mapped \{/periode, GET\} route +0ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RouterExplorer] Mapped \{/periode, POST\} route +0ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RouterExplorer] Mapped \{/periode/:id, PUT\} route +1ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RoutesResolver] AdminController \{/admin\}: +0ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RouterExplorer] Mapped \{/admin, POST\} route +1ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RoutesResolver] MataKuliahController \{/mata-kuliah\}: +0ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RouterExplorer] Mapped \{/mata-kuliah, POST\} route +0ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RouterExplorer] Mapped \{/mata-kuliah, GET\} route +1ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RouterExplorer] Mapped \{/mata-kuliah/:id, PUT\} route +0ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RoutesResolver] SesiMataKuliahController \{/sesi-mata-kuliah\}: +0ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RouterExplorer] Mapped \{/sesi-mata-kuliah, GET\} route +1ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RouterExplorer] Mapped \{/sesi-mata-kuliah, POST\} route +0ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RoutesResolver] PeriodeMataKuliahController \{/periode-mata-kuliah\}: +0ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RouterExplorer] Mapped \{/periode-mata-kuliah, GET\} route +1ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RouterExplorer] Mapped \{/periode-mata-kuliah, POST\} route +0ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RouterExplorer] Mapped \{/periode-mata-kuliah/:id, DELETE\} route +1ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RoutesResolver] PengantarController \{/pengantar\}: +0ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RouterExplorer] Mapped \{/pengantar/:id, GET\} route +0ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RouterExplorer] Mapped \{/pengantar, POST\} route +1ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [RouterExplorer] Mapped \{/pengantar/:id, PUT\} route +0ms\
+[Nest] 1905  - 09/12/2023, 8:31:31 AM     LOG [NestApplication] Nest application successfully started +5ms\
+}

@@ -109,9 +109,16 @@ export class MahasiswaService {
                 where: { nim }
             })
 
+	    const user = await this.prisma.user.findUnique({
+		    where: { username: nim }
+	    })
+
+
+	    if(user) {
             const userMahasiswa = await this.prisma.user.delete({
                 where: { username: nim }
             })
+	    }
 
             return deleteMahasiswa;
         } catch (error) {
