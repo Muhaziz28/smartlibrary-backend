@@ -86,12 +86,12 @@ export class SesiMataKuliahService {
 
     async getSesiMataKuliahById(id: number, req: any) {
         try {
-            const checkSesi = await this.prisma.sesiMataKuliah.findFirst({
-                where: { periodeMataKuliahId: id },
+            const checkSesi = await this.prisma.sesiMataKuliah.findUnique({
+                where: { id: id },
             })
             if (!checkSesi) throw new NotFoundException('Sesi Mata Kuliah tidak ditemukan');
-            const sesiMataKuliah = await this.prisma.sesiMataKuliah.findFirst({
-                where: { periodeMataKuliahId: id },
+            const sesiMataKuliah = await this.prisma.sesiMataKuliah.findUnique({
+                where: { id: id },
                 include: {
                     periodeMataKuliah: {
                         include: {
