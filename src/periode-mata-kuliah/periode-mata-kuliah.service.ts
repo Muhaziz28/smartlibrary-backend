@@ -60,6 +60,7 @@ export class PeriodeMataKuliahService {
                     include: {
                         mataKuliah: { include: { prodi: { include: { fakultas: true } } } },
                         periode: true,
+			SesiMataKuliah: true,
                     },
                     skip: offset,
                     take: limitParsed,

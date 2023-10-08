@@ -96,6 +96,7 @@ export class SesiMataKuliahService {
                     periodeMataKuliah: {
                         include: {
                             SesiMataKuliah: {
+				    where: {id:id},
                                 include: { Pengantar: true, Pertemuan: true }
                             },
                             mataKuliah: { include: { prodi: true } }
