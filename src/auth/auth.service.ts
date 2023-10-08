@@ -1,15 +1,46 @@
 import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
-import { AuthDto, LoginDto } from "./dto";
+import { AuthDto, LoginDto, NimDto } from "./dto";
 import * as argon from "argon2";
 import { JwtService } from "@nestjs/jwt";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { ConfigService } from "@nestjs/config";
 import { Role } from "@prisma/client";
+import { json } from "express";
 
 @Injectable()
 export class AuthService {
     constructor(private prisma: PrismaService, private jwt: JwtService, private config: ConfigService) { }
+
+    async getNim(dto: NimDto) {
+        console.log(dto.nim)
+        console.log(typeof dto.nim)
+        try {
+            const nimMahasiswa = await this.prisma.mahasiswa.findUnique({
+                where: { nim: dto.nim },
+            })
+            if (!nimMahasiswa) {
+                throw new NotFoundException('NIM tidak ditemukan');
+            }
+
+            const nimOnUser = await this.prisma.user.findUnique({
+                where: { username: dto.nim }
+            })
+            if (nimOnUser) {
+                throw new ForbiddenException('NIM tidak dapat digunakan');
+            }
+
+            return nimMahasiswa;
+
+        } catch (error) {
+            if (error instanceof PrismaClientKnownRequestError) {
+                if (error.code === 'P2002') {
+                    throw new ForbiddenException('Username sudah digunakan');
+                }
+            }
+            throw error;
+        }
+    }
 
     async signupMahasiswa(dto: AuthDto) {
         const hash = await argon.hash(dto.password);
