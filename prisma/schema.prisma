@@ -11,13 +11,15 @@ datasource db {
 }
 
 model Mahasiswa {
-  nim              String  @id
-  nama             String
-  email            String  @unique
-  usernameTelegram String? @unique @map("username_telegram")
-  noTelp           String? @unique @map("no_telp")
-  prodi            Prodi?  @relation(fields: [prodiId], references: [id])
-  prodiId          Int?    @map("prodi_id")
+  nim                String               @id
+  nama               String
+  email              String               @unique
+  usernameTelegram   String?              @unique @map("username_telegram")
+  noTelp             String?              @unique @map("no_telp")
+  prodi              Prodi?               @relation(fields: [prodiId], references: [id])
+  prodiId            Int?                 @map("prodi_id")
+  MataKuliahDiajukan MataKuliahDiajukan[]
+  MataKuliahDiambil  MataKuliahDiambil[]
 
   @@map("mahasiswa")
 }
@@ -109,16 +111,18 @@ model PeriodeMataKuliah {
 }
 
 model SesiMataKuliah {
-  id                  Int               @id @default(autoincrement())
-  periodeMataKuliah   PeriodeMataKuliah @relation(fields: [periodeMataKuliahId], references: [id])
-  periodeMataKuliahId Int               @map("periode_mata_kuliah_id")
-  kodeSesi            String            @map("kode_sesi")
+  id                  Int                  @id @default(autoincrement())
+  periodeMataKuliah   PeriodeMataKuliah    @relation(fields: [periodeMataKuliahId], references: [id])
+  periodeMataKuliahId Int                  @map("periode_mata_kuliah_id")
+  kodeSesi            String               @map("kode_sesi")
   jadwal              String
-  dosen               Dosen             @relation(fields: [nip], references: [nip])
+  dosen               Dosen                @relation(fields: [nip], references: [nip])
   nip                 String
   Pengantar           Pengantar?
   Rps                 Rps?
   Pertemuan           Pertemuan[]
+  MataKuliahDiajukan  MataKuliahDiajukan[]
+  MataKuliahDiambil   MataKuliahDiambil[]
 
   @@map("sesi_mata_kuliah")
 }
@@ -157,4 +161,25 @@ model Pertemuan {
   barcode          String?
 
   @@map("pertemuan")
+}
+
+model MataKuliahDiajukan {
+  id               Int            @id @default(autoincrement())
+  sesiMataKuliah   SesiMataKuliah @relation(fields: [sesiMataKuliahId], references: [id])
+  sesiMataKuliahId Int            @map("sesi_mata_kuliah_id")
+  mahasiswa        Mahasiswa      @relation(fields: [nim], references: [nim])
+  nim              String
+  status           Int            @default(0) // 0 = pending, 1 = diterima, 2 = ditolak
+
+  @@map("mata_kuliah_diajukan")
+}
+
+model MataKuliahDiambil {
+  id               Int            @id @default(autoincrement())
+  sesiMataKuliah   SesiMataKuliah @relation(fields: [sesiMataKuliahId], references: [id])
+  sesiMataKuliahId Int            @map("sesi_mata_kuliah_id")
+  mahasiswa        Mahasiswa      @relation(fields: [nim], references: [nim])
+  nim              String
+
+  @@map("mata_kuliah_diambil")
 }

@@ -16,13 +16,16 @@ import { PeriodeMataKuliahModule } from './periode-mata-kuliah/periode-mata-kuli
 import { PengantarModule } from './pengantar/pengantar.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { PertemuanModule } from './pertemuan/pertemuan.module';
+import { MataKuliahDiambilModule } from './mata-kuliah-diambil/mata-kuliah-diambil.module';
+import { MataKuliahTersediaModule } from './mata-kuliah-tersedia/mata-kuliah-tersedia.module';
+import { MataKuliahDiajukanModule } from './mata-kuliah-diajukan/mata-kuliah-diajukan.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    AuthModule, MahasiswaModule, DosenModule, PrismaModule, FakultasModule, ProdiModule, UserModule, PeriodeModule, AdminModule, MataKuliahModule, SesiMataKuliahModule, PeriodeMataKuliahModule, PengantarModule, PertemuanModule],
+    AuthModule, MahasiswaModule, DosenModule, PrismaModule, FakultasModule, ProdiModule, UserModule, PeriodeModule, AdminModule, MataKuliahModule, SesiMataKuliahModule, PeriodeMataKuliahModule, PengantarModule, PertemuanModule, MataKuliahDiambilModule, MataKuliahTersediaModule, MataKuliahDiajukanModule],
   controllers: [UserController],
   providers: [],
 })
