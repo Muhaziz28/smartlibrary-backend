@@ -96,14 +96,19 @@ export class SesiMataKuliahService {
                     periodeMataKuliah: {
                         include: {
                             SesiMataKuliah: {
-				    where: {id:id},
+                                where: { id: id },
                                 include: { Pengantar: true, Pertemuan: true }
                             },
                             mataKuliah: { include: { prodi: true } }
                         }
                     },
-                    dosen: { include: { fakultas: true } }
+                    dosen: { include: { fakultas: true } },
                 }
+            });
+
+            const pesertaSesi = await this.prisma.mataKuliahDiambil.findMany({
+                where: { sesiMataKuliahId: id },
+                include: { mahasiswa: true }
             });
 
             // Mengubah properti file dalam Pengantar
@@ -117,7 +122,7 @@ export class SesiMataKuliahService {
                 }
             });
 
-            return sesiMataKuliah;
+            return { ...sesiMataKuliah, pesertaSesi };
         } catch (error) {
             throw error;
         }

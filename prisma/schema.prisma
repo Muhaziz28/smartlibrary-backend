@@ -163,13 +163,19 @@ model Pertemuan {
   @@map("pertemuan")
 }
 
+enum statusMataKuliahDiajukan {
+  pending
+  diterima
+  ditolak
+}
+
 model MataKuliahDiajukan {
-  id               Int            @id @default(autoincrement())
-  sesiMataKuliah   SesiMataKuliah @relation(fields: [sesiMataKuliahId], references: [id])
-  sesiMataKuliahId Int            @map("sesi_mata_kuliah_id")
-  mahasiswa        Mahasiswa      @relation(fields: [nim], references: [nim])
+  id               Int                      @id @default(autoincrement())
+  sesiMataKuliah   SesiMataKuliah           @relation(fields: [sesiMataKuliahId], references: [id])
+  sesiMataKuliahId Int                      @map("sesi_mata_kuliah_id")
+  mahasiswa        Mahasiswa                @relation(fields: [nim], references: [nim])
   nim              String
-  status           Int            @default(0) // 0 = pending, 1 = diterima, 2 = ditolak
+  status           statusMataKuliahDiajukan @default(pending)
 
   @@map("mata_kuliah_diajukan")
 }
