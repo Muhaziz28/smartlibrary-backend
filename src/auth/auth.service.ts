@@ -67,7 +67,14 @@ export class AuthService {
                 }
             })
 
-            return this.singToken(user.id, user.username, user.role);
+            // return this.singToken(user.id, user.username, user.role);
+            const token = await this.singToken(user.id, user.username, user.role);
+            // Password tidak disertakan pada response
+            delete user.password;
+
+            return {
+                ...token, user: user,
+            }
         } catch (error) {
             if (error instanceof PrismaClientKnownRequestError) {
                 if (error.code === 'P2002') {
