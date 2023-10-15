@@ -7,6 +7,7 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { ConfigService } from "@nestjs/config";
 import { Role } from "@prisma/client";
 import { json } from "express";
+import { FakultasService } from "src/fakultas/fakultas.service";
 
 @Injectable()
 export class AuthService {
@@ -131,6 +132,23 @@ export class AuthService {
 
         return {
             access_token: token,
+        }
+    }
+
+    async getFakultas(params: { search?: string }) {
+        try {
+            const { search = '' } = params;
+            const fakultas = await this.prisma.fakultas.findMany({
+                where: { OR: [{ namaFakultas: { contains: search } }, { singkatan: { contains: search } }] },
+                include: {
+                    Prodi: true
+                }
+            });
+            if (!fakultas.length) { throw new ForbiddenException('Data tidak ditemukan'); }
+            return fakultas
+        }
+        catch (error) {
+            throw error;
         }
     }
 }
