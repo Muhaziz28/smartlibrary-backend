@@ -159,6 +159,7 @@ model Pertemuan {
   deskripsi        String?
   tanggal          String?
   barcode          String?
+  Tugas            Tugas[]
 
   @@map("pertemuan")
 }
@@ -188,4 +189,16 @@ model MataKuliahDiambil {
   nim              String
 
   @@map("mata_kuliah_diambil")
+}
+
+model Tugas {
+  id          Int       @id @default(autoincrement())
+  pertemuan   Pertemuan @relation(fields: [pertemuanId], references: [id])
+  pertemuanId Int       @map("pertemuan_id")
+  file        String?
+  link        String?
+  deskripsi   String?
+  tanggal     DateTime
+
+  @@map("tugas")
 }

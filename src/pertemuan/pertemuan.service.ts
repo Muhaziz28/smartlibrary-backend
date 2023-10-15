@@ -14,6 +14,9 @@ export class PertemuanService {
                 where: {
                     id: id,
                 },
+                include: {
+                    Tugas: true,
+                }
             });
 
             if (pertemuan.file) {

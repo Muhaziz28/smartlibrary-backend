@@ -97,7 +97,11 @@ export class SesiMataKuliahService {
                         include: {
                             SesiMataKuliah: {
                                 where: { id: id },
-                                include: { Pengantar: true, Pertemuan: true }
+                                include: {
+                                    Pengantar: true, Pertemuan: {
+                                        include: { Tugas: true }
+                                    }
+                                }
                             },
                             mataKuliah: { include: { prodi: true } }
                         }
