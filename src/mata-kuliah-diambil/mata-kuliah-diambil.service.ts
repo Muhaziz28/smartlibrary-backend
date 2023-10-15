@@ -1,12 +1,20 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class MataKuliahDiambilService {
     constructor(private prisma: PrismaService) { }
 
-    async mataKuliahDiambil() {
+    async mataKuliahDiambil(user: User) {
         try {
+            const userIsmahasiswa = await this.prisma.mahasiswa.findFirst({
+                where: {
+                    nim: user.username
+                }
+            })
+            if (!userIsmahasiswa) throw new NotFoundException('Anda bukan mahasiswa')
+
             const periodeAktif = await this.prisma.periode.findFirst({
                 where: {
                     isActive: true,
