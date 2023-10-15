@@ -19,7 +19,7 @@ export class PertemuanService {
                 }
             });
 
-            if (pertemuan.file) {
+            if (pertemuan.file != null) {
                 pertemuan.file = `http://${req.headers.host}/public/pertemuan/${pertemuan.file}`;
             }
 
@@ -37,7 +37,7 @@ export class PertemuanService {
                 },
             });
 
-            if (checkPertemuan.file) {
+            if (checkPertemuan.file != null) {
                 const filePath = path.join(__dirname, '..', '..', 'public', 'pertemuan', checkPertemuan.file);
                 fs.unlink(filePath, (err) => {
                     if (err) throw err;

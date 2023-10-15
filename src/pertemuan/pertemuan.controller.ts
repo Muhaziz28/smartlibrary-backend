@@ -27,10 +27,20 @@ export class PertemuanController {
         })
     }))
     updatePertemuan(@Param('id', ParseIntPipe) id: number, @UploadedFile() file?: Express.Multer.File, @Body() pertemuan?: PertemuanDto) {
-        const data = {
-            link: pertemuan.link,
-            deskripsi: pertemuan.deskripsi,
-            file: file.filename,
+        let data: any;
+
+        if (file != null) {
+            data = {
+                link: pertemuan.link,
+                deskripsi: pertemuan.deskripsi,
+                file: file.filename,
+            }
+        }
+        else {
+            data = {
+                link: pertemuan.link,
+                deskripsi: pertemuan.deskripsi,
+            }
         }
         return this.pertemuanService.updatePertemuan(data, id);
     }

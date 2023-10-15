@@ -36,11 +36,21 @@ export class PengantarController {
             }
         }
 
-        const data = {
-            sesiMataKuliahId,
-            link: addPengantarDto.link,
-            deskripsi: addPengantarDto.deskripsi,
-            file: file.filename,
+        let data: any;
+
+        if (file == null) {
+            data = {
+                sesiMataKuliahId,
+                link: addPengantarDto.link,
+                deskripsi: addPengantarDto.deskripsi,
+            }
+        } else {
+            data = {
+                sesiMataKuliahId,
+                link: addPengantarDto.link,
+                deskripsi: addPengantarDto.deskripsi,
+                file: file.filename,
+            }
         }
         return this.pengantarService.addPengantar(data);
     }
@@ -65,11 +75,20 @@ export class PengantarController {
             }
         }
 
-        const data = {
-            sesiMataKuliahId,
-            link: addPengantarDto.link,
-            deskripsi: addPengantarDto.deskripsi,
-            file: file.filename,
+        let data: any;
+        if (file == null) {
+            data = {
+                sesiMataKuliahId,
+                link: addPengantarDto.link,
+                deskripsi: addPengantarDto.deskripsi,
+            }
+        } else {
+            data = {
+                sesiMataKuliahId,
+                link: addPengantarDto.link,
+                deskripsi: addPengantarDto.deskripsi,
+                file: file.filename,
+            }
         }
         return this.pengantarService.updatePengantar(id, data);
     }
