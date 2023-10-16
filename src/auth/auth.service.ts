@@ -66,8 +66,19 @@ export class AuthService {
                     role: 'MAHASISWA',
                     password: hash,
                     prodiId: dto.prodiId,
+                },
+                include: {
+                    prodi: true
                 }
             })
+
+            await this.prisma.mahasiswa.update({
+                where: { nim: dto.username },
+                data: {
+                    prodiId: dto.prodiId,
+                }
+            })
+
 
             // return this.singToken(user.id, user.username, user.role);
             const token = await this.singToken(user.id, user.username, user.role);

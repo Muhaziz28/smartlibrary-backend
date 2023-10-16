@@ -35,7 +35,11 @@ export class MataKuliahDiambilService {
                 },
                 include: {
                     sesiMataKuliah: true,
-                    mahasiswa: true,
+                    mahasiswa: {
+                        include: {
+                            prodi: true
+                        },
+                    }
                 }
             })
 
