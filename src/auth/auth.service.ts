@@ -65,6 +65,7 @@ export class AuthService {
                     username: dto.username,
                     role: 'MAHASISWA',
                     password: hash,
+                    prodiId: dto.prodiId,
                 }
             })
 
