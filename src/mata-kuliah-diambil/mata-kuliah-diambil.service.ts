@@ -28,13 +28,21 @@ export class MataKuliahDiambilService {
                     sesiMataKuliah: {
                         periodeMataKuliah: {
                             periode: {
-                                isActive: true
-                            }
-                        }
+                                isActive: true,
+                            },
+                        },
                     }
                 },
                 include: {
-                    sesiMataKuliah: true,
+                    sesiMataKuliah: {
+                        include: {
+                            periodeMataKuliah: {
+                                include: {
+                                    mataKuliah: true,
+                                }
+                            }
+                        }
+                    },
                     mahasiswa: {
                         include: {
                             prodi: true
