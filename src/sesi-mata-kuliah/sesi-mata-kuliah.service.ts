@@ -176,4 +176,35 @@ export class SesiMataKuliahService {
             throw error;
         }
     }
+
+    async getPesertaMataKuliah(user: User, sesiMataKuliahId: number) {
+        try {
+            const userisDosen = await this.prisma.dosen.findFirst({
+                where: {
+                    nip: user.username
+                }
+            })
+            if (!userisDosen) throw new NotFoundException('Anda bukan dosen');
+
+            const pesertaMataKuliah = await this.prisma.mataKuliahDiambil.findMany({
+                where: {
+                    sesiMataKuliahId: sesiMataKuliahId,
+                    sesiMataKuliah: {
+                        nip: user.username
+                    }
+                },
+                include: {
+                    mahasiswa: {
+                        include: {
+                            prodi: true
+                        }
+                    }
+                }
+            });
+
+            return pesertaMataKuliah;
+        } catch (error) {
+            throw error;
+        }
+    }
 }

@@ -32,4 +32,9 @@ export class SesiMataKuliahController {
     addSesiMataKuliah(@Body() dto: AddSesiMataKuliahDto) {
         return this.sesiMataKuliahService.addSesiMataKuliah(dto);
     }
+
+    @Get('peserta/:sesiMataKuliahId')
+    getPesertaMataKuliah(@Param('sesiMataKuliahId', ParseIntPipe) sesiMataKuliahId: number, @GetUser() user: User) {
+        return this.sesiMataKuliahService.getPesertaMataKuliah(user, sesiMataKuliahId);
+    }
 }
