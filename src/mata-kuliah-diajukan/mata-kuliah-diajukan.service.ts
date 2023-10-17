@@ -33,10 +33,11 @@ export class MataKuliahDiajukanService {
                             periodeMataKuliah: {
                                 include: {
                                     periode: true,
+                                    mataKuliah: true,
                                 }
                             },
                         }
-                    }
+                    },
                     // mahasiswa: true,
                 }
             })
