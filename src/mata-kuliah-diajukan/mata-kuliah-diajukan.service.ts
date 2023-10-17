@@ -117,7 +117,8 @@ export class MataKuliahDiajukanService {
                     status: statusMataKuliahDiajukan.pending
                 },
                 include: {
-                    sesiMataKuliah: { include: { periodeMataKuliah: { include: { periode: true, } }, } }
+                    sesiMataKuliah: { include: { periodeMataKuliah: { include: { periode: true, } }, } },
+                    mahasiswa: true,
                 }
             })
 
