@@ -126,6 +126,12 @@ export class SesiMataKuliahService {
                 }
             });
 
+            // urutkan pertemuan berdasarkan pertemuanKe
+            sesiMataKuliah.periodeMataKuliah.SesiMataKuliah.forEach((periode) => {
+                periode.Pertemuan.sort((a, b) => a.pertemuanKe - b.pertemuanKe)
+            });
+
+
             return { ...sesiMataKuliah, pesertaSesi };
         } catch (error) {
             throw error;
