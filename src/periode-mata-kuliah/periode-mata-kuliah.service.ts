@@ -12,12 +12,8 @@ export class PeriodeMataKuliahService {
             const periodeParsed = periodeId != null ? parseInt(periodeId.toString()) : null;
             const pageParsed = parseInt(page.toString());
             const limitParsed = parseInt(limit.toString());
-
-            const periodeAktif = await this.prisma.periode.findFirst({
-                where: { isActive: true },
-            })
+            const periodeAktif = await this.prisma.periode.findFirst({ where: { isActive: true } })
             if (!periodeAktif) throw new NotFoundException('Tidak ada periode aktif')
-
             let mataKuliahPeriode: any;
             let totalPage: any;
             let offset: any;
@@ -27,13 +23,10 @@ export class PeriodeMataKuliahService {
                 mataKuliahPeriodeCount = await this.prisma.periodeMataKuliah.count({
                     where: { periodeId: periodeAktif.id, mataKuliah: { namaMataKuliah: { contains: search } } },
                 })
-
                 // hitung total halaman
                 totalPage = Math.ceil(mataKuliahPeriodeCount / limitParsed);
-
                 // hitung offset
                 offset = (pageParsed - 1) * limitParsed;
-
                 mataKuliahPeriode = await this.prisma.periodeMataKuliah.findMany({
                     where: { periodeId: periodeAktif.id, mataKuliah: { namaMataKuliah: { contains: search } } },
                     include: {
@@ -48,100 +41,66 @@ export class PeriodeMataKuliahService {
                 mataKuliahPeriodeCount = await this.prisma.periodeMataKuliah.count({
                     where: { periodeId: periodeParsed, mataKuliah: { namaMataKuliah: { contains: search } } },
                 })
-
                 // hitung total halaman
                 totalPage = Math.ceil(mataKuliahPeriodeCount / limitParsed);
-
                 // hitung offset
                 offset = (pageParsed - 1) * limitParsed;
-
                 mataKuliahPeriode = await this.prisma.periodeMataKuliah.findMany({
                     where: { periodeId: parseInt(periodeId.toString()) },
                     include: {
                         mataKuliah: { include: { prodi: { include: { fakultas: true } } } },
                         periode: true,
-			SesiMataKuliah: true,
+                        SesiMataKuliah: true,
                     },
                     skip: offset,
                     take: limitParsed,
                 })
             }
-
             return { data: mataKuliahPeriode, totalPage, page: pageParsed, limit: limitParsed, totalData: mataKuliahPeriodeCount }
-        } catch (error) {
-            throw error;
-        }
+        } catch (error) { throw error }
     }
 
     async addMataKuliahPeriode(dto: AddPeriodeMataKuliahDto) {
         try {
-            const periodeAktif = await this.prisma.periode.findFirst({
-                where: { isActive: true }
-            })
-
+            const periodeAktif = await this.prisma.periode.findFirst({ where: { isActive: true } })
             if (!periodeAktif) throw new NotFoundException('Tidak ada periode aktif')
-
-            const mataKuliah = await this.prisma.mataKuliah.findMany({
-                where: { id: { in: dto.mataKuliahId } }
-            })
-
+            const mataKuliah = await this.prisma.mataKuliah.findMany({ where: { id: { in: dto.mataKuliahId } } })
             if (mataKuliah.length !== dto.mataKuliahId.length) throw new NotFoundException('Mata kuliah tidak ditemukan')
-
             const mataKuliahPeriode = await this.prisma.periodeMataKuliah.createMany({
                 data: dto.mataKuliahId.map((id) => ({
                     periodeId: periodeAktif.id,
                     mataKuliahId: id
                 }))
             })
-
             return mataKuliahPeriode;
-        } catch (error) {
-            throw error;
-        }
+        } catch (error) { throw error; }
     }
 
     async getListMataKuliahPeriode() {
         try {
             // Ambil mata kuliah yang belum ada di periode aktif
-            const periodeAktif = await this.prisma.periode.findFirst({
-                where: { isActive: true },
-            })
-
+            const periodeAktif = await this.prisma.periode.findFirst({ where: { isActive: true } })
             if (!periodeAktif) throw new NotFoundException('Tidak ada periode aktif')
-
             const mataKuliahPeriode = await this.prisma.periodeMataKuliah.findMany({
                 where: { periodeId: periodeAktif.id },
                 select: { mataKuliahId: true },
             })
-
             const mataKuliahPeriodeId = mataKuliahPeriode.map((item) => item.mataKuliahId)
-
             const mataKuliah = await this.prisma.mataKuliah.findMany({
                 where: { id: { notIn: mataKuliahPeriodeId } },
                 include: { prodi: { include: { fakultas: true } } },
             })
-
             return mataKuliah;
         }
-        catch (error) {
-            throw error;
-        }
+        catch (error) { throw error }
     }
 
     async removeMataKuliahPeriode(id: number) {
         try {
-            const periodeMataKuliah = await this.prisma.periodeMataKuliah.findUnique({
-                where: { id },
-            })
+            const periodeMataKuliah = await this.prisma.periodeMataKuliah.findUnique({ where: { id } })
             if (!periodeMataKuliah) throw new NotFoundException('Mata kuliah periode tidak ditemukan')
-
-            const deletedPeriodeMataKuliah = await this.prisma.periodeMataKuliah.delete({
-                where: { id },
-            })
-
+            const deletedPeriodeMataKuliah = await this.prisma.periodeMataKuliah.delete({ where: { id } })
             return deletedPeriodeMataKuliah;
-        } catch (error) {
-            throw error;
-        }
+        } catch (error) { throw error }
     }
 }

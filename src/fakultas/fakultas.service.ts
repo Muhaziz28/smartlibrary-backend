@@ -16,7 +16,6 @@ export class FakultasService {
                 where: { namaFakultas: dto.namaFakultas }
             });
             if (checkFakultas) { throw new ConflictException('Nama Fakultas sudah terdaftar'); }
-
             const fakultas = await this.prisma.fakultas.create({
                 data: {
                     namaFakultas: dto.namaFakultas,
@@ -25,9 +24,7 @@ export class FakultasService {
             })
             return fakultas;
         } catch (error) {
-            if (error instanceof PrismaClientKnownRequestError) {
-                if (error.code === 'P2002') { throw new ForbiddenException('Nama Fakultas sudah terdaftar'); }
-            }
+            if (error instanceof PrismaClientKnownRequestError) if (error.code === 'P2002') { throw new ForbiddenException('Nama Fakultas sudah terdaftar'); }
             throw error;
         }
     }
@@ -37,16 +34,12 @@ export class FakultasService {
             const { search = '' } = params;
             const fakultas = await this.prisma.fakultas.findMany({
                 where: { OR: [{ namaFakultas: { contains: search } }, { singkatan: { contains: search } }] },
-                include: {
-                    Prodi: true
-                }
+                include: { Prodi: true }
             });
             if (!fakultas.length) { throw new ForbiddenException('Data tidak ditemukan'); }
             return fakultas
         }
-        catch (error) {
-            throw error;
-        }
+        catch (error) { throw error }
     }
 
     async getFakultasById(id: number) {
@@ -57,9 +50,7 @@ export class FakultasService {
             if (!fakultas) { throw new ForbiddenException('Data tidak ditemukan'); }
             return fakultas;
         }
-        catch (error) {
-            throw error;
-        }
+        catch (error) { throw error }
     }
 
     async updateFakultas(id: number, dto: UpdateFakultasDto) {
@@ -69,7 +60,6 @@ export class FakultasService {
                 where: { namaFakultas: dto.namaFakultas }
             });
             if (checkFakultas) { throw new ForbiddenException('Nama Fakultas sudah terdaftar'); }
-
             const fakultas = await this.prisma.fakultas.update({
                 where: { id: id },
                 data: { namaFakultas: dto.namaFakultas, singkatan: dto.singkatan, }
@@ -77,9 +67,7 @@ export class FakultasService {
             return fakultas;
         }
         catch (error) {
-            if (error instanceof PrismaClientKnownRequestError) {
-                if (error.code === 'P2002') { throw new ForbiddenException('Nama Fakultas sudah terdaftar'); }
-            }
+            if (error instanceof PrismaClientKnownRequestError) if (error.code === 'P2002') { throw new ForbiddenException('Nama Fakultas sudah terdaftar'); }
             throw error;
         }
     }
@@ -91,9 +79,7 @@ export class FakultasService {
             });
             return fakultas;
         }
-        catch (error) {
-            throw error;
-        }
+        catch (error) { throw error; }
     }
 
     async addProdiByFakultasId(id: number, dto: CreateProdiFakultasDto) {
@@ -102,7 +88,6 @@ export class FakultasService {
                 where: { namaProdi: dto.namaProdi, fakultasId: id }
             })
             if (checkProdi) { throw new ConflictException('Nama Prodi sudah terdaftar'); }
-
             const prodi = await this.prisma.prodi.create({
                 data: {
                     namaProdi: dto.namaProdi,
@@ -111,9 +96,7 @@ export class FakultasService {
                 }
             })
             return prodi;
-        } catch (error) {
-            throw error;
-        }
+        } catch (error) { throw error }
     }
 
     async getProdiByFakultasId(query: { search?: string }, id: number) {
@@ -127,11 +110,8 @@ export class FakultasService {
                     }
                 }
             });
-
             if (!fakultas) { throw new NotFoundException('Fakultas tidak ditemukan'); }
             return fakultas.Prodi;
-        } catch (error) {
-            throw error;
-        }
+        } catch (error) { throw error }
     }
 }

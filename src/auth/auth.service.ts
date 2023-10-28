@@ -14,31 +14,14 @@ export class AuthService {
     constructor(private prisma: PrismaService, private jwt: JwtService, private config: ConfigService) { }
 
     async getNim(dto: NimDto) {
-        console.log(dto.nim)
-        console.log(typeof dto.nim)
         try {
-            const nimMahasiswa = await this.prisma.mahasiswa.findUnique({
-                where: { nim: dto.nim },
-            })
-            if (!nimMahasiswa) {
-                throw new NotFoundException('NIM tidak ditemukan');
-            }
-
-            const nimOnUser = await this.prisma.user.findUnique({
-                where: { username: dto.nim }
-            })
-            if (nimOnUser) {
-                throw new ForbiddenException('NIM tidak dapat digunakan');
-            }
-
+            const nimMahasiswa = await this.prisma.mahasiswa.findUnique({ where: { nim: dto.nim } })
+            if (!nimMahasiswa) throw new NotFoundException('NIM tidak ditemukan');
+            const nimOnUser = await this.prisma.user.findUnique({ where: { username: dto.nim } })
+            if (nimOnUser) throw new ForbiddenException('NIM tidak dapat digunakan');
             return nimMahasiswa;
-
         } catch (error) {
-            if (error instanceof PrismaClientKnownRequestError) {
-                if (error.code === 'P2002') {
-                    throw new ForbiddenException('Username sudah digunakan');
-                }
-            }
+            if (error instanceof PrismaClientKnownRequestError) if (error.code === 'P2002') throw new ForbiddenException('Username sudah digunakan');
             throw error;
         }
     }
@@ -47,19 +30,11 @@ export class AuthService {
         const hash = await argon.hash(dto.password);
         // save user to db
         try {
-            const mahasiswa = await this.prisma.mahasiswa.findUnique({
-                where: { nim: dto.username },
-            })
+            const mahasiswa = await this.prisma.mahasiswa.findUnique({ where: { nim: dto.username } })
             if (!mahasiswa) { throw new NotFoundException('NIM tidak ditemukan'); }
-
-            const prodi = await this.prisma.prodi.findUnique({
-                where: { id: dto.prodiId }
-            })
+            const prodi = await this.prisma.prodi.findUnique({ where: { id: dto.prodiId } })
             if (!prodi) { throw new NotFoundException('Prodi tidak ditemukan'); }
-
-            if (dto.password !== dto.passwordConfirmation) {
-                throw new Error('Password tidak sama');
-            }
+            if (dto.password !== dto.passwordConfirmation) throw new Error('Password tidak sama');
             const user = await this.prisma.user.create({
                 data: {
                     username: dto.username,
@@ -67,65 +42,35 @@ export class AuthService {
                     password: hash,
                     prodiId: dto.prodiId,
                 },
-                include: {
-                    prodi: true
-                }
+                include: { prodi: true }
             })
-
             await this.prisma.mahasiswa.update({
                 where: { nim: dto.username },
-                data: {
-                    prodiId: dto.prodiId,
-                }
+                data: { prodiId: dto.prodiId }
             })
-
-
-            // return this.singToken(user.id, user.username, user.role);
             const token = await this.singToken(user.id, user.username, user.role);
-            // Password tidak disertakan pada response
             delete user.password;
-
-            return {
-                ...token, user: user,
-            }
+            return { ...token, user: user }
         } catch (error) {
-            if (error instanceof PrismaClientKnownRequestError) {
-                if (error.code === 'P2002') {
-                    throw new ForbiddenException('Username sudah digunakan');
-                }
-            }
+            if (error instanceof PrismaClientKnownRequestError) if (error.code === 'P2002') throw new ForbiddenException('Username sudah digunakan');
             throw error;
         }
     }
 
     async login(dto: LoginDto) {
         try {
-            const user = await this.prisma.user.findUnique({
-                where: { username: dto.username }
-            })
-
+            const user = await this.prisma.user.findUnique({ where: { username: dto.username } })
             // Jika data user tidak ditemukan
-            if (!user) {
-                throw new ForbiddenException("Username atau password salah")
-            }
-
+            if (!user) throw new ForbiddenException("Username atau password salah")
             // Jika password tidak cocok
             const isPasswordMatch = await argon.verify(user.password, dto.password);
-            if (!isPasswordMatch) {
-                throw new ForbiddenException("Username atau password salah")
-            }
-
+            if (!isPasswordMatch) throw new ForbiddenException("Username atau password salah")
             const token = await this.singToken(user.id, user.username, user.role);
             // Password tidak disertakan pada response
             delete user.password;
-
-            return {
-                ...token, user: user,
-            }
+            return { ...token, user: user, }
         }
-        catch (error) {
-            throw error;
-        }
+        catch (error) { throw error; }
     }
 
     async singToken(userId: number, username: string, role: string): Promise<{ access_token: string }> {
@@ -134,17 +79,12 @@ export class AuthService {
             username,
             role,
         }
-
         const secret = this.config.get('JWT_SECRET')
-
         const token = await this.jwt.signAsync(payload, {
             expiresIn: '1d',
             secret: secret,
         });
-
-        return {
-            access_token: token,
-        }
+        return { access_token: token }
     }
 
     async getFakultas(params: { search?: string }) {
@@ -152,15 +92,11 @@ export class AuthService {
             const { search = '' } = params;
             const fakultas = await this.prisma.fakultas.findMany({
                 where: { OR: [{ namaFakultas: { contains: search } }, { singkatan: { contains: search } }] },
-                include: {
-                    Prodi: true
-                }
+                include: { Prodi: true }
             });
             if (!fakultas.length) { throw new ForbiddenException('Data tidak ditemukan'); }
             return fakultas
         }
-        catch (error) {
-            throw error;
-        }
+        catch (error) { throw error; }
     }
 }

@@ -13,9 +13,7 @@ export class MataKuliahService {
                 where: { id: dto.prodiId },
                 include: { fakultas: true }
             })
-
             if (!prodiCheck) throw new NotFoundException('Prodi tidak ditemukan');
-
             const result = await this.prisma.mataKuliah.create({
                 data: {
                     kodeMataKuliah: dto.kodeMataKuliah,
@@ -27,9 +25,7 @@ export class MataKuliahService {
             return result;
         } catch (error) {
             if (error instanceof PrismaClientKnownRequestError) {
-                if (error.code === 'P2002') {
-                    throw new ConflictException('Kode Mata Kuliah sudah digunakan');
-                }
+                if (error.code === 'P2002') throw new ConflictException('Kode Mata Kuliah sudah digunakan');
             }
             throw error;
         }
@@ -42,7 +38,6 @@ export class MataKuliahService {
                 where: { OR: [{ namaMataKuliah: { contains: search } }, { kodeMataKuliah: { contains: search } }] },
                 include: { prodi: true, }
             })
-
             if (!mataKuliah.length) { throw new NotFoundException('Data tidak ditemukan'); }
             return mataKuliah;
         } catch (error) {
@@ -54,15 +49,12 @@ export class MataKuliahService {
         try {
             const matakuliah = await this.prisma.mataKuliah.findFirst({ where: { id: params.id } })
             if (!matakuliah) throw new NotFoundException('Mata Kuliah tidak ditemukan');
-            console.log(matakuliah);
             let updateMataKuliah: any;
-
             if (matakuliah.kodeMataKuliah !== dto.kodeMataKuliah) {
                 const checkKodeMataKuliah = await this.prisma.mataKuliah.findFirst({
                     where: { kodeMataKuliah: dto.kodeMataKuliah }
                 })
                 if (checkKodeMataKuliah) { throw new ConflictException('Kode Mata Kuliah sudah digunakan'); }
-
                 updateMataKuliah = await this.prisma.mataKuliah.update({
                     where: { id: params.id },
                     data: {
@@ -82,10 +74,7 @@ export class MataKuliahService {
                     }
                 })
             }
-
             return updateMataKuliah;
-        } catch (error) {
-            throw error;
-        }
+        } catch (error) { throw error }
     }
 }

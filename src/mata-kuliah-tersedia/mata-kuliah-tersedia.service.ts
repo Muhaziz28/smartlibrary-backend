@@ -9,25 +9,16 @@ export class MataKuliahTersediaService {
     async getListMataKuliahTersedia(user: User) {
         try {
             const userMahasiswa = await this.prisma.user.findFirst({
-                where: {
-                    username: user.username,
-                }
+                where: { username: user.username }
             })
             if (userMahasiswa.role !== 'MAHASISWA') throw new NotFoundException('Anda bukan mahasiswa');
-
             const periodeAktif = await this.prisma.periode.findFirst({
-                where: {
-                    isActive: true,
-                }
+                where: { isActive: true }
             });
-
             if (!periodeAktif) throw new NotFoundException('Tidak ada periode aktif');
-
             const sesiMataKuliah = await this.prisma.sesiMataKuliah.findMany({
                 where: {
-                    periodeMataKuliah: {
-                        periodeId: periodeAktif.id,
-                    },
+                    periodeMataKuliah: { periodeId: periodeAktif.id },
                     MataKuliahDiambil: {
                         none: {
                             nim: userMahasiswa.username,
@@ -43,10 +34,7 @@ export class MataKuliahTersediaService {
                     }
                 }
             });
-
             return sesiMataKuliah;
-        } catch (error) {
-            throw error;
-        }
+        } catch (error) { throw error }
     }
 }

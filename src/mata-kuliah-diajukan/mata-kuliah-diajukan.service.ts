@@ -13,16 +13,12 @@ export class MataKuliahDiajukanService {
             const periodeAktif = await this.prisma.periode.findFirst({
                 where: { isActive: true }
             })
-
             if (!periodeAktif) throw new NotFoundException('Tidak ada periode aktif')
-
             const mataKuliahDiajukan = await this.prisma.mataKuliahDiajukan.findMany({
                 where: {
                     sesiMataKuliah: {
                         periodeMataKuliah: {
-                            periode: {
-                                isActive: true
-                            }
+                            periode: { isActive: true }
                         }
                     },
                     nim: user.username,
@@ -38,14 +34,10 @@ export class MataKuliahDiajukanService {
                             },
                         }
                     },
-                    // mahasiswa: true,
                 }
             })
-
             return mataKuliahDiajukan;
-        } catch (error) {
-            throw error;
-        }
+        } catch (error) { throw error }
     }
 
     async addMataKuliahDiajukan(dto: AddMataKuliahDiajukanDto, user: User) {
@@ -54,12 +46,9 @@ export class MataKuliahDiajukanService {
             const periodeAktif = await this.prisma.periode.findFirst({
                 where: { isActive: true }
             })
-
             const added = await this.prisma.mataKuliahDiajukan.findMany({
                 where: {
-                    sesiMataKuliahId: {
-                        in: dto.sesiMataKuliahId,
-                    },
+                    sesiMataKuliahId: { in: dto.sesiMataKuliahId },
                     nim: user.username,
                     sesiMataKuliah: {
                         periodeMataKuliah: {
@@ -71,9 +60,7 @@ export class MataKuliahDiajukanService {
                     sesiMataKuliah: {
                         include: {
                             periodeMataKuliah: {
-                                include: {
-                                    periode: true,
-                                }
+                                include: { periode: true }
                             }
                         }
                     }
@@ -81,14 +68,12 @@ export class MataKuliahDiajukanService {
             })
 
             if (added.length > 0) throw new NotFoundException('Sesi mata kuliah sudah diambil')
-
             const mataKuliahDiajukan = await this.prisma.mataKuliahDiajukan.createMany({
                 data: dto.sesiMataKuliahId.map((sesiMataKuliahId) => ({
                     sesiMataKuliahId,
                     nim: user.username,
                 }))
             })
-
             return mataKuliahDiajukan
         } catch (error) {
             throw error;
@@ -101,16 +86,12 @@ export class MataKuliahDiajukanService {
             const periodeAktif = await this.prisma.periode.findFirst({
                 where: { isActive: true }
             })
-
             if (!periodeAktif) throw new NotFoundException('Tidak ada periode aktif')
-
             const mataKuliahDiajukan = await this.prisma.mataKuliahDiajukan.findMany({
                 where: {
                     sesiMataKuliah: {
                         periodeMataKuliah: {
-                            periode: {
-                                isActive: true
-                            }
+                            periode: { isActive: true }
                         },
                         nip: user.username,
                     },
@@ -121,7 +102,6 @@ export class MataKuliahDiajukanService {
                     mahasiswa: true,
                 }
             })
-
             return mataKuliahDiajukan;
         } catch (error) {
             throw error;
@@ -131,27 +111,19 @@ export class MataKuliahDiajukanService {
     async konfirmasiPengajuanMataKuliahMahasiswa(id: number, user: User, dto: KonfirmasiMataKuliahDiajukanDto) {
         try {
             if (user.role !== Role.DOSEN) throw new NotFoundException('Anda bukan dosen')
-
             const mataKuliahDiajukanCheck = await this.prisma.mataKuliahDiajukan.findFirst({
                 where: { id },
                 include: { sesiMataKuliah: true }
             })
-
-            console.log('iD', id)
-
             if (!mataKuliahDiajukanCheck) throw new NotFoundException('Mata kuliah diajukan tidak ditemukan')
-
             const periodeAktif = await this.prisma.periode.findFirst({
                 where: { isActive: true }
             })
-
             if (!periodeAktif) throw new NotFoundException('Tidak ada periode aktif')
-
             const mataKuliahDiajukan = await this.prisma.mataKuliahDiajukan.update({
                 where: { id },
                 data: { status: statusMataKuliahDiajukan[dto.status] }
             })
-
             if (mataKuliahDiajukan.status === statusMataKuliahDiajukan.diterima) {
                 const mataKuliahDiambil = await this.prisma.mataKuliahDiambil.create({
                     data: {
@@ -160,7 +132,6 @@ export class MataKuliahDiajukanService {
                     }
                 });
             }
-
             return mataKuliahDiajukan;
         } catch (error) {
             throw error;

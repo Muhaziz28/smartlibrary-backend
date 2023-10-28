@@ -22,9 +22,7 @@ export class DosenService {
             const total = await this.prisma.dosen.count({
                 where: { OR: [{ nip: { contains: search } }, { nama: { contains: search } }] }
             });
-            if (!dosen.length) {
-                throw new ForbiddenException('Data tidak ditemukan');
-            }
+            if (!dosen.length) throw new ForbiddenException('Data tidak ditemukan');
             return {
                 data: dosen,
                 total,
@@ -32,45 +30,29 @@ export class DosenService {
                 last_page: Math.ceil(total / limit)
             }
         }
-        catch (error) {
-            throw error;
-        }
+        catch (error) { throw error }
     }
 
     async getDosenByNip(nip: string) {
         try {
-            const dosen = await this.prisma.dosen.findUnique({
-                where: { nip: nip },
-            })
+            const dosen = await this.prisma.dosen.findUnique({ where: { nip: nip } })
             if (!dosen) { throw new NotFoundException('Data tidak ditemukan'); }
             return dosen;
-        } catch (error) {
-            throw error;
-        }
+        } catch (error) { throw error; }
     }
 
     async addDosen(dto: CreateDosenDto) {
         try {
-            const nipDosen = await this.prisma.dosen.findUnique({
-                where: { nip: dto.nip }
-            })
-            if (nipDosen) { throw new ForbiddenException('NIP sudah terdaftar'); }
-
-            const emailDosen = await this.prisma.dosen.findUnique({
-                where: { email: dto.email }
-            })
+            const nipDosen = await this.prisma.dosen.findUnique({ where: { nip: dto.nip } })
+            if (nipDosen) throw new ForbiddenException('NIP sudah terdaftar');
+            const emailDosen = await this.prisma.dosen.findUnique({ where: { email: dto.email } })
             if (emailDosen) { throw new ForbiddenException('Email sudah terdaftar'); }
-
-            const noTelpDosen = await this.prisma.dosen.findUnique({
-                where: { noTelp: dto.noTelp }
-            })
+            const noTelpDosen = await this.prisma.dosen.findUnique({ where: { noTelp: dto.noTelp } })
             if (noTelpDosen) { throw new ForbiddenException('No Telp sudah terdaftar'); }
-
             const fakultas = await this.prisma.fakultas.findUnique({
                 where: { id: dto.fakultasId }
             })
             if (!fakultas) { throw new NotFoundException('Fakultas tidak ditemukan'); }
-
             const dosen = await this.prisma.dosen.create({
                 data: {
                     nip: dto.nip,
@@ -81,9 +63,7 @@ export class DosenService {
                     fakultasId: dto.fakultasId
                 }
             });
-
             const hashPassword = await argon.hash(dto.nip);
-
             await this.prisma.user.create({
                 data: {
                     username: dto.nip,
@@ -92,15 +72,10 @@ export class DosenService {
                     prodiId: null,
                 }
             })
-
             return dosen;
         }
         catch (error) {
-            if (error instanceof PrismaClientKnownRequestError) {
-                if (error.code === 'P2002') {
-                    throw new ForbiddenException('NIP sudah terdaftar');
-                }
-            }
+            if (error instanceof PrismaClientKnownRequestError) if (error.code === 'P2002') throw new ForbiddenException('NIP sudah terdaftar');
             throw error;
         }
     }
@@ -124,11 +99,7 @@ export class DosenService {
             return dosen
         }
         catch (error) {
-            if (error instanceof PrismaClientKnownRequestError) {
-                if (error.code === 'P2002') {
-                    throw new ForbiddenException('NIP sudah terdaftar');
-                }
-            }
+            if (error instanceof PrismaClientKnownRequestError) if (error.code === 'P2002') throw new ForbiddenException('NIP sudah terdaftar');
             throw error;
         }
     }
@@ -139,13 +110,10 @@ export class DosenService {
                 where: { nip: nip }
             })
             if (!findDosenData) { throw new NotFoundException('Data tidak ditemukan'); }
-
             const dosen = await this.prisma.dosen.delete({
                 where: { nip: nip }
             });
             return dosen
-        } catch (error) {
-            throw error;
-        }
+        } catch (error) { throw error }
     }
 }

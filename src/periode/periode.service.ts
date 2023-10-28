@@ -16,26 +16,19 @@ export class PeriodeService {
             const total = await this.prisma.periode.count({
                 where: { OR: [{ mulai: { contains: search } }, { selesai: { contains: search } }] }
             });
-            if (!periode.length) {
-                throw new NotFoundException('Data tidak ditemukan');
-            }
+            if (!periode.length) throw new NotFoundException('Data tidak ditemukan')
             return {
                 data: periode,
                 total,
                 page,
                 last_page: Math.ceil(total / limit)
             }
-
-        } catch (error) {
-            throw error;
-        }
+        } catch (error) { throw error }
     }
 
     async addPeriode(dto: CreatePeriodeDto) {
         try {
-            const checkPeriodeActive = await this.prisma.periode.findFirst({
-                where: { isActive: true }
-            })
+            const checkPeriodeActive = await this.prisma.periode.findFirst({ where: { isActive: true } })
             if (checkPeriodeActive) {
                 await this.prisma.periode.update({
                     where: { id: checkPeriodeActive.id },
@@ -49,20 +42,14 @@ export class PeriodeService {
                     isActive: true
                 }
             })
-
             return periode;
-        } catch (error) {
-            throw error;
-        }
+        } catch (error) { throw error }
     }
 
     async updatePeriode(id: number, dto: UpdatePeriodeDto) {
         try {
-            const periode = await this.prisma.periode.findUnique({
-                where: { id: id }
-            })
+            const periode = await this.prisma.periode.findUnique({ where: { id: id } })
             if (!periode) { throw new NotFoundException('Periode tidak ditemukan'); }
-
             const updatePeriode = await this.prisma.periode.update({
                 where: { id: id },
                 data: {
@@ -70,10 +57,7 @@ export class PeriodeService {
                     selesai: dto.selesai,
                 }
             })
-
             return updatePeriode;
-        } catch (error) {
-            throw error;
-        }
+        } catch (error) { throw error }
     }
 }

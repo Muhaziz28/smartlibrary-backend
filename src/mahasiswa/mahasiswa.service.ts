@@ -14,7 +14,6 @@ export class MahasiswaService {
                 where: { nim: dto.nim }
             });
             if (checkMahasiswa) { throw new ConflictException('NIM sudah terdaftar'); }
-
             const mahasiswa = await this.prisma.mahasiswa.create({
                 data: {
                     nim: dto.nim,
@@ -27,11 +26,7 @@ export class MahasiswaService {
             return mahasiswa;
         }
         catch (error) {
-            if (error instanceof PrismaClientKnownRequestError) {
-                if (error.code === 'P2002') {
-                    throw new ConflictException('NIM sudah terdaftar');
-                }
-            }
+            if (error instanceof PrismaClientKnownRequestError) if (error.code === 'P2002') throw new ConflictException('NIM sudah terdaftar');
             throw error;
         }
     }
@@ -48,9 +43,7 @@ export class MahasiswaService {
             const total = await this.prisma.mahasiswa.count({
                 where: { OR: [{ nim: { contains: search } }, { nama: { contains: search } }] }
             });
-            if (!mahasiswa.length) {
-                throw new NotFoundException('Data tidak ditemukan');
-            }
+            if (!mahasiswa.length) throw new NotFoundException('Data tidak ditemukan');
             return {
                 data: mahasiswa,
                 total,
@@ -58,9 +51,7 @@ export class MahasiswaService {
                 last_page: Math.ceil(total / limit)
             }
         }
-        catch (error) {
-            throw error;
-        }
+        catch (error) { throw error }
     }
 
     async getMahasiswaByNim(nim: string) {
@@ -68,14 +59,10 @@ export class MahasiswaService {
             const mahasiswa = await this.prisma.mahasiswa.findUnique({
                 where: { nim }
             });
-
             if (!mahasiswa) { throw new NotFoundException('NIM tidak ditemukan'); }
-
             return mahasiswa;
         }
-        catch (error) {
-            throw error;
-        }
+        catch (error) { throw error }
     }
 
     async updateMahasiswa(nim: string, dto: UpdateMahasiswaDto) {
@@ -84,7 +71,6 @@ export class MahasiswaService {
                 where: { nim }
             })
             if (!mahasiswa) { throw new NotFoundException('NIM tidak ditemukan'); }
-
             const updateMahasiswa = await this.prisma.mahasiswa.update({
                 where: { nim },
                 data: {
@@ -95,31 +81,24 @@ export class MahasiswaService {
                 }
             })
             return updateMahasiswa;
-        } catch (error) {
-            throw error;
-        }
+        } catch (error) { throw error }
     }
 
     async deleteMahasiswa(nim: string) {
         try {
             const mahasiswa = await this.prisma.mahasiswa.findUnique({ where: { nim } })
             if (!mahasiswa) { throw new NotFoundException('NIM tidak ditemukan'); }
-
             const deleteMahasiswa = await this.prisma.mahasiswa.delete({
                 where: { nim }
             })
-
-	    const user = await this.prisma.user.findUnique({
-		    where: { username: nim }
-	    })
-
-
-	    if(user) {
-            const userMahasiswa = await this.prisma.user.delete({
+            const user = await this.prisma.user.findUnique({
                 where: { username: nim }
             })
-	    }
-
+            if (user) {
+                const userMahasiswa = await this.prisma.user.delete({
+                    where: { username: nim }
+                })
+            }
             return deleteMahasiswa;
         } catch (error) {
             throw error;

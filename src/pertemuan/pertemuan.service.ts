@@ -11,39 +11,25 @@ export class PertemuanService {
     async getPertemuan(id: number, req: any) {
         try {
             const pertemuan = await this.prisma.pertemuan.findUnique({
-                where: {
-                    id: id,
-                },
-                include: {
-                    Tugas: true,
-                }
+                where: { id: id },
+                include: { Tugas: true }
             });
-
             if (pertemuan.file != null) {
                 pertemuan.file = `http://${req.headers.host}/public/pertemuan/${pertemuan.file}`;
             }
-
             return pertemuan;
-        } catch (error) {
-            return error;
-        }
+        } catch (error) { return error }
     }
 
     async updatePertemuan(data: any, id: number) {
         try {
-            const checkPertemuan = await this.prisma.pertemuan.findUnique({
-                where: {
-                    id: id,
-                },
-            });
-
+            const checkPertemuan = await this.prisma.pertemuan.findUnique({ where: { id: id } });
             if (checkPertemuan.file != null) {
                 const filePath = path.join(__dirname, '..', '..', 'public', 'pertemuan', checkPertemuan.file);
                 fs.unlink(filePath, (err) => {
                     if (err) throw err;
                 });
             }
-
             const pertemuan = await this.prisma.pertemuan.update({
                 data: {
                     file: data.file,
@@ -51,14 +37,9 @@ export class PertemuanService {
                     deskripsi: data.deskripsi,
                     tanggal: data.tanggal,
                 },
-                where: {
-                    id: id,
-                }
+                where: { id: id }
             });
-
             return pertemuan;
-        } catch (error) {
-            throw error;
-        }
+        } catch (error) { throw error }
     }
 }

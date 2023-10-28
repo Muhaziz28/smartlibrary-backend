@@ -11,7 +11,6 @@ export class AuthController {
         // ambil nim dari body
         const nimMahasiswa = this.authService.getNim(dto);
         return nimMahasiswa;
-
     }
 
     @Post('signup')

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post, Put, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { JwtGuard } from 'src/auth/guard';
 import { TugasService } from './tugas.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -12,9 +12,14 @@ import { User } from '@prisma/client';
 export class TugasController {
     constructor(private tugasService: TugasService) { }
 
-    @Get(':id')
-    getTugas(@GetUser() user: User, @Param('id', ParseIntPipe) id: number, @Req() req: any) {
-        return this.tugasService.getTugas(user, id, req);
+    @Get(':pertemuanId')
+    getTugas(@GetUser() user: User, @Param('pertemuanId', ParseIntPipe) pertemuanId: number, @Req() req: any) {
+        return this.tugasService.getTugas(user, pertemuanId, req);
+    }
+
+    @Get('detail/:id')
+    getTugasById(@GetUser() user: User, @Param('id', ParseIntPipe) id: number, @Req() req: any) {
+        return this.tugasService.getTugasById(user, id, req);
     }
 
     @Put(':id')
@@ -28,13 +33,27 @@ export class TugasController {
             }
         })
     }))
-    updateTugas(@Param('id', ParseIntPipe) id: number, @UploadedFile() file?: Express.Multer.File, @Body() dto?: TugasDto) {
-        const data = {
-            link: dto.link,
-            deskripsi: dto.deskripsi,
-            file: file.filename,
+    updateTugas(@GetUser() user: User, @Param('id', ParseIntPipe) id: number, @UploadedFile() file?: Express.Multer.File, @Body() dto?: TugasDto) {
+        const date = new Date(dto.tanggal).toISOString();
+
+        let data: any;
+        if (file != null) {
+            data = {
+                link: dto.link,
+                deskripsi: dto.deskripsi,
+                file: file.filename,
+                tanggal: date,
+            }
+        } else {
+            data = {
+                link: dto.link,
+                deskripsi: dto.deskripsi,
+                file: null,
+                tanggal: date,
+            }
         }
-        return this.tugasService.updateTugas(data, id);
+
+        return this.tugasService.updateTugas(user, data, id);
     }
 
     @Post(':id')
@@ -70,5 +89,10 @@ export class TugasController {
 
         }
         return this.tugasService.addTugas(data, id);
+    }
+
+    @Delete(':id')
+    deleteTugas(@GetUser() user: User, @Param('id', ParseIntPipe) id: number) {
+        return this.tugasService.removeTugas(user, id);
     }
 }
