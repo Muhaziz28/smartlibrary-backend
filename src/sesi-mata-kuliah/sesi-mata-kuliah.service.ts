@@ -53,9 +53,13 @@ export class SesiMataKuliahService {
                     periodeMataKuliah: {
                         include: {
                             SesiMataKuliah: {
-                                include: { Pengantar: true, Pertemuan: true }
+                                include: {
+                                    Pengantar: true, Pertemuan: {
+                                        include: { Tugas: true }
+                                    }
+                                },
                             },
-                            mataKuliah: { include: { prodi: true } }
+                            mataKuliah: { include: { prodi: true } },
                         }
                     },
                     dosen: { include: { fakultas: true } }
