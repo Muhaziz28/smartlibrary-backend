@@ -37,7 +37,8 @@ export class PertemuanService {
                     deskripsi: data.deskripsi,
                     tanggal: data.tanggal,
                 },
-                where: { id: id }
+                where: { id: id },
+                include: { Tugas: true }
             });
             return pertemuan;
         } catch (error) { throw error }
