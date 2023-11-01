@@ -3,7 +3,7 @@ import { JwtGuard } from 'src/auth/guard';
 import { TugasService } from './tugas.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-import { TugasDto } from './dto';
+import { TolakDto, TugasDto } from './dto';
 import { GetUser } from 'src/auth/decorator';
 import { User } from '@prisma/client';
 
@@ -94,5 +94,20 @@ export class TugasController {
     @Delete(':id')
     deleteTugas(@GetUser() user: User, @Param('id', ParseIntPipe) id: number) {
         return this.tugasService.removeTugas(user, id);
+    }
+
+    @Get('mahasiswa/:tugasId')
+    getTugasMatakuliahMahasiswa(@GetUser() user: User, @Param('tugasId', ParseIntPipe) tugasId: number, @Req() req: any) {
+        return this.tugasService.getTugasMatakuliahMahasiswa(user, tugasId, req);
+    }
+
+    @Put('mahasiswa/:tugasId/terima')
+    terimaTugas(@GetUser() user: User, @Param('tugasId', ParseIntPipe) tugasId: number) {
+        return this.tugasService.terimaTugasMahasiswa(user, tugasId);
+    }
+
+    @Put('mahasiswa/:tugasId/tolak')
+    tolakTugas(@GetUser() user: User, @Param('tugasId', ParseIntPipe) tugasId: number, @Body() dto: TolakDto) {
+        return this.tugasService.tolakTugasMahasiswa(user, tugasId, dto);
     }
 }

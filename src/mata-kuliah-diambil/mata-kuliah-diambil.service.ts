@@ -22,7 +22,8 @@ export class MataKuliahDiambilService {
                         periodeMataKuliah: {
                             periode: { isActive: true },
                         },
-                    }
+                    },
+                    mahasiswa: { nim: userIsmahasiswa.nim },
                 },
                 include: {
                     sesiMataKuliah: {

@@ -20,6 +20,7 @@ model Mahasiswa {
   prodiId            Int?                 @map("prodi_id")
   MataKuliahDiajukan MataKuliahDiajukan[]
   MataKuliahDiambil  MataKuliahDiambil[]
+  TugasMahasiswa     TugasMahasiswa[]
 
   @@map("mahasiswa")
 }
@@ -192,13 +193,37 @@ model MataKuliahDiambil {
 }
 
 model Tugas {
-  id          Int       @id @default(autoincrement())
-  pertemuan   Pertemuan @relation(fields: [pertemuanId], references: [id])
-  pertemuanId Int       @map("pertemuan_id")
-  file        String?
-  link        String?
-  deskripsi   String?
-  tanggal     DateTime
+  id             Int              @id @default(autoincrement())
+  pertemuan      Pertemuan        @relation(fields: [pertemuanId], references: [id])
+  pertemuanId    Int              @map("pertemuan_id")
+  file           String?
+  link           String?
+  deskripsi      String?
+  tanggal        DateTime
+  TugasMahasiswa TugasMahasiswa[]
 
   @@map("tugas")
+}
+
+enum TugasStatus {
+  pending
+  diterima
+  ditolak
+}
+
+model TugasMahasiswa {
+  id            Int         @id @default(autoincrement())
+  tugas         Tugas       @relation(fields: [tugasId], references: [id])
+  tugasId       Int         @map("tugas_id")
+  mahasiswa     Mahasiswa   @relation(fields: [nim], references: [nim])
+  nim           String
+  file          String?
+  link          String?
+  deskripsi     String?
+  tanggalUpload DateTime    @map("tanggal_upload")
+  tugasStatus   TugasStatus @default(pending) @map("tugas_status")
+  alasanTolak   String?     @map("alasan_tolak")
+  tanggalProses DateTime?   @map("tanggal_proses")
+
+  @@map("tugas_mahasiswa")
 }

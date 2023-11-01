@@ -127,6 +127,7 @@ export class SesiMataKuliahService {
             });
             if (kodeSesiExist) throw new NotFoundException('Kode sesi sudah terdaftar pada periode mata kuliah ini');
             const pertemuanDefault = new Array(16).fill({}).map((_, index) => ({ pertemuanKe: index + 1 }))
+            console.log(pertemuanDefault);
             const sesiMataKuliah = await this.prisma.sesiMataKuliah.create({
                 data: {
                     nip: dto.nip,
@@ -140,10 +141,17 @@ export class SesiMataKuliahService {
                         }
                     }
                 },
-                include: { Pertemuan: true }
+                include: {
+                    Pertemuan: {
+                        include: { Tugas: true }
+                    }
+                }
             })
             return sesiMataKuliah;
-        } catch (error) { throw error }
+        } catch (error) {
+            if (error.code === 'P2002') throw new NotFoundException('NIP dosen tidak ditemukan');
+            throw error
+        }
     }
 
     async getPesertaMataKuliah(user: User, sesiMataKuliahId: number) {
