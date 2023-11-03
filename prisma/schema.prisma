@@ -173,7 +173,7 @@ model ModulPengantar {
 
 model Group {
   id          Int       @id @default(autoincrement())
-  penganter   Pengantar @relation(fields: [pengantarId], references: [id])
+  pengantar   Pengantar @relation(fields: [pengantarId], references: [id])
   pengantarId Int       @map("pengantar_id")
   deskripsi   String
   link        String
@@ -188,12 +188,9 @@ model Pertemuan {
   sesiMataKuliah   SesiMataKuliah @relation(fields: [sesiMataKuliahId], references: [id])
   sesiMataKuliahId Int            @map("sesi_mata_kuliah_id")
   pertemuanKe      Int            @map("pertemuan_ke")
-  file             String?
-  link             String?
-  deskripsi        String?
-  tanggal          String?
-  barcode          String?
+  tanggalPertemuan DateTime?      @map("tanggal_pertemuan")
   Tugas            Tugas[]
+  BahanAjar        BahanAjar[]
 
   @@map("pertemuan")
 }
@@ -259,4 +256,16 @@ model TugasMahasiswa {
   tanggalProses DateTime?   @map("tanggal_proses")
 
   @@map("tugas_mahasiswa")
+}
+
+model BahanAjar {
+  id          Int       @id @default(autoincrement())
+  pertemuan   Pertemuan @relation(fields: [pertemuanId], references: [id])
+  pertemuanId Int       @map("pertemuan_id")
+  file        String?
+  link        String?
+  judul       String
+  video       String?
+
+  @@map("bahan_ajar")
 }

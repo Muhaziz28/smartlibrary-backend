@@ -23,13 +23,14 @@ import { TugasModule } from './tugas/tugas.module';
 import { TugasMahasiswaModule } from './tugas-mahasiswa/tugas-mahasiswa.module';
 import { RpsModule } from './rps/rps.module';
 import { ModulPengantarModule } from './modul-pengantar/modul-pengantar.module';
+import { GroupModule } from './group/group.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    AuthModule, MahasiswaModule, DosenModule, PrismaModule, FakultasModule, ProdiModule, UserModule, PeriodeModule, AdminModule, MataKuliahModule, SesiMataKuliahModule, PeriodeMataKuliahModule, PengantarModule, PertemuanModule, MataKuliahDiambilModule, MataKuliahTersediaModule, MataKuliahDiajukanModule, TugasModule, TugasMahasiswaModule, RpsModule, ModulPengantarModule],
+    AuthModule, MahasiswaModule, DosenModule, PrismaModule, FakultasModule, ProdiModule, UserModule, PeriodeModule, AdminModule, MataKuliahModule, SesiMataKuliahModule, PeriodeMataKuliahModule, PengantarModule, PertemuanModule, MataKuliahDiambilModule, MataKuliahTersediaModule, MataKuliahDiajukanModule, TugasModule, TugasMahasiswaModule, RpsModule, ModulPengantarModule, GroupModule],
   controllers: [UserController],
   providers: [],
 })
