@@ -120,7 +120,6 @@ model SesiMataKuliah {
   dosen               Dosen                @relation(fields: [nip], references: [nip])
   nip                 String
   Pengantar           Pengantar?
-  Rps                 Rps?
   Pertemuan           Pertemuan[]
   MataKuliahDiajukan  MataKuliahDiajukan[]
   MataKuliahDiambil   MataKuliahDiambil[]
@@ -129,25 +128,59 @@ model SesiMataKuliah {
 }
 
 model Pengantar {
-  id               Int            @id @default(autoincrement())
-  sesiMataKuliah   SesiMataKuliah @relation(fields: [sesiMataKuliahId], references: [id])
-  sesiMataKuliahId Int            @unique @map("sesi_mata_kuliah_id")
+  id               Int              @id @default(autoincrement())
+  sesiMataKuliah   SesiMataKuliah   @relation(fields: [sesiMataKuliahId], references: [id])
+  sesiMataKuliahId Int              @unique @map("sesi_mata_kuliah_id")
+  deskripsi        String?
   file             String?
   link             String?
-  deskripsi        String?
+  video            String?
+  Rps              Rps[]
+  createdAt        DateTime         @default(now()) @map("created_at")
+  updatedAt        DateTime         @updatedAt @map("updated_at")
+  Group            Group[]
+  ModulPengantar   ModulPengantar[]
 
   @@map("pengantar")
 }
 
 model Rps {
-  id               Int            @id @default(autoincrement())
-  sesiMataKuliah   SesiMataKuliah @relation(fields: [sesiMataKuliahId], references: [id])
-  sesiMataKuliahId Int            @unique @map("sesi_mata_kuliah_id")
-  file             String?
-  link             String?
-  deskripsi        String?
+  id          Int       @id @default(autoincrement())
+  pengantar   Pengantar @relation(fields: [pengantarId], references: [id])
+  pengantarId Int       @map("pengantar_id")
+  file        String?
+  link        String?
+  deskripsi   String?
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
 
   @@map("rps")
+}
+
+model ModulPengantar {
+  id          Int       @id @default(autoincrement())
+  pengantar   Pengantar @relation(fields: [pengantarId], references: [id])
+  pengantarId Int       @map("pengantar_id")
+  judul       String
+  deskripsi   String?
+  link        String?
+  file        String?
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@map("modul_pengantar")
+}
+
+model Group {
+  id          Int       @id @default(autoincrement())
+  penganter   Pengantar @relation(fields: [pengantarId], references: [id])
+  pengantarId Int       @map("pengantar_id")
+  deskripsi   String
+  link        String
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@map("group")
 }
 
 model Pertemuan {

@@ -20,6 +20,7 @@ export class PengantarService {
                     link: data.link,
                     deskripsi: data.deskripsi,
                     file: data.file,
+                    video: data.video,
                 },
                 include: { sesiMataKuliah: true }
             });
@@ -31,11 +32,19 @@ export class PengantarService {
         try {
             const sesiMataKuliah = await this.prisma.sesiMataKuliah.findUnique({ where: { id } });
             if (!sesiMataKuliah) throw new NotFoundException('Sesi Mata Kuliah tidak ditemukan');
-            const pengantar = await this.prisma.pengantar.findFirst({ where: { sesiMataKuliahId: id } });
+            const pengantar = await this.prisma.pengantar.findFirst({
+                where: { sesiMataKuliahId: id },
+                include: {
+                    Rps: true,
+                    ModulPengantar: true,
+                    Group: true
+                }
+            });
             if (!pengantar) throw new NotFoundException('Pengantar tidak ditemukan');
-            if (pengantar.file) {
-                pengantar.file = `http://${req.headers.host}/public/pengantar/${pengantar.file}`;
-            }
+            if (pengantar.file) { pengantar.file = `http://${req.headers.host}/public/pengantar/${pengantar.file}`; }
+            pengantar.Rps.forEach(rps => {
+                if (rps.file) { rps.file = `http://${req.headers.host}/public/rps/${rps.file}`; }
+            });
             return pengantar;
         } catch (error) { throw error }
     }
@@ -56,6 +65,7 @@ export class PengantarService {
                     link: data.link,
                     deskripsi: data.deskripsi,
                     file: data.file,
+                    video: data.video,
                 },
                 include: { sesiMataKuliah: true, }
             });

@@ -21,13 +21,14 @@ import { MataKuliahTersediaModule } from './mata-kuliah-tersedia/mata-kuliah-ter
 import { MataKuliahDiajukanModule } from './mata-kuliah-diajukan/mata-kuliah-diajukan.module';
 import { TugasModule } from './tugas/tugas.module';
 import { TugasMahasiswaModule } from './tugas-mahasiswa/tugas-mahasiswa.module';
+import { RpsModule } from './rps/rps.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    AuthModule, MahasiswaModule, DosenModule, PrismaModule, FakultasModule, ProdiModule, UserModule, PeriodeModule, AdminModule, MataKuliahModule, SesiMataKuliahModule, PeriodeMataKuliahModule, PengantarModule, PertemuanModule, MataKuliahDiambilModule, MataKuliahTersediaModule, MataKuliahDiajukanModule, TugasModule, TugasMahasiswaModule],
+    AuthModule, MahasiswaModule, DosenModule, PrismaModule, FakultasModule, ProdiModule, UserModule, PeriodeModule, AdminModule, MataKuliahModule, SesiMataKuliahModule, PeriodeMataKuliahModule, PengantarModule, PertemuanModule, MataKuliahDiambilModule, MataKuliahTersediaModule, MataKuliahDiajukanModule, TugasModule, TugasMahasiswaModule, RpsModule],
   controllers: [UserController],
   providers: [],
 })
