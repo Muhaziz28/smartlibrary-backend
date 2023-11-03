@@ -223,14 +223,14 @@ model MataKuliahDiambil {
 }
 
 model Tugas {
-  id             Int              @id @default(autoincrement())
-  pertemuan      Pertemuan        @relation(fields: [pertemuanId], references: [id])
-  pertemuanId    Int              @map("pertemuan_id")
-  file           String?
-  link           String?
-  deskripsi      String?
-  tanggal        DateTime
-  TugasMahasiswa TugasMahasiswa[]
+  id                 Int              @id @default(autoincrement())
+  pertemuan          Pertemuan        @relation(fields: [pertemuanId], references: [id])
+  pertemuanId        Int              @map("pertemuan_id")
+  file               String?
+  link               String?
+  deskripsi          String?
+  tanggalPengumpulan DateTime
+  TugasMahasiswa     TugasMahasiswa[]
 
   @@map("tugas")
 }
@@ -254,6 +254,7 @@ model TugasMahasiswa {
   tugasStatus   TugasStatus @default(pending) @map("tugas_status")
   alasanTolak   String?     @map("alasan_tolak")
   tanggalProses DateTime?   @map("tanggal_proses")
+  nilai         Float?      @map("nilai")
 
   @@map("tugas_mahasiswa")
 }
