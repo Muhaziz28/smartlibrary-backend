@@ -15,7 +15,15 @@ export class SesiMataKuliahService {
                     periodeMataKuliah: {
                         include: {
                             SesiMataKuliah: {
-                                include: { Pengantar: true, Pertemuan: true }
+                                include: {
+                                    Pengantar: {
+                                        include: {
+                                            Rps: true,
+                                            ModulPengantar: true,
+                                            Group: true,
+                                        }
+                                    }, Pertemuan: true
+                                }
                             },
                             mataKuliah: { include: { prodi: true } }
                         }
@@ -29,6 +37,20 @@ export class SesiMataKuliahService {
                     if (periode.Pengantar !== null) {
                         if (periode.Pengantar.file !== null) periode.Pengantar.file = `http://${req.headers.host}/public/pengantar/${periode.Pengantar.file}`;
                         else periode.Pengantar.file = null;
+                    }
+
+                    if (periode.Pengantar.Rps.length > 0) {
+                        periode.Pengantar.Rps.forEach((rps) => {
+                            if (rps.file !== null) rps.file = `http://${req.headers.host}/public/rps/${rps.file}`;
+                            else rps.file = null;
+                        });
+                    }
+
+                    if (periode.Pengantar.ModulPengantar.length > 0) {
+                        periode.Pengantar.ModulPengantar.forEach((modul) => {
+                            if (modul.file !== null) modul.file = `http://${req.headers.host}/public/modul-pengantar/${modul.file}`;
+                            else modul.file = null;
+                        });
                     }
                 });
                 return { ...sesi, };
@@ -47,7 +69,13 @@ export class SesiMataKuliahService {
                         include: {
                             SesiMataKuliah: {
                                 include: {
-                                    Pengantar: true, Pertemuan: { include: { Tugas: true } }
+                                    Pengantar: {
+                                        include: {
+                                            Rps: true,
+                                            ModulPengantar: true,
+                                            Group: true,
+                                        }
+                                    }, Pertemuan: { include: { Tugas: true } }
                                 },
                             },
                             mataKuliah: { include: { prodi: true } },
@@ -62,6 +90,20 @@ export class SesiMataKuliahService {
                     if (periode.Pengantar !== null) {
                         if (periode.Pengantar.file !== null) periode.Pengantar.file = `http://${req.headers.host}/public/pengantar/${periode.Pengantar.file}`;
                         else periode.Pengantar.file = null;
+                    }
+
+                    if (periode.Pengantar.Rps.length > 0) {
+                        periode.Pengantar.Rps.forEach((rps) => {
+                            if (rps.file !== null) rps.file = `http://${req.headers.host}/public/rps/${rps.file}`;
+                            else rps.file = null;
+                        });
+                    }
+
+                    if (periode.Pengantar.ModulPengantar.length > 0) {
+                        periode.Pengantar.ModulPengantar.forEach((modul) => {
+                            if (modul.file !== null) modul.file = `http://${req.headers.host}/public/modul-pengantar/${modul.file}`;
+                            else modul.file = null;
+                        });
                     }
                 });
                 return {
@@ -84,7 +126,13 @@ export class SesiMataKuliahService {
                             SesiMataKuliah: {
                                 where: { id: id },
                                 include: {
-                                    Pengantar: true, Pertemuan: { include: { Tugas: true } }
+                                    Pengantar: {
+                                        include: {
+                                            Rps: true,
+                                            ModulPengantar: true,
+                                            Group: true,
+                                        }
+                                    }, Pertemuan: { include: { Tugas: true } }
                                 }
                             },
                             mataKuliah: { include: { prodi: true } }
@@ -102,6 +150,20 @@ export class SesiMataKuliahService {
                 if (periode.Pengantar !== null) {
                     if (periode.Pengantar.file !== null) periode.Pengantar.file = `http://${req.headers.host}/public/pengantar/${periode.Pengantar.file}`;
                     else periode.Pengantar.file = null;
+
+                    if (periode.Pengantar.Rps.length > 0) {
+                        periode.Pengantar.Rps.forEach((rps) => {
+                            if (rps.file !== null) rps.file = `http://${req.headers.host}/public/rps/${rps.file}`;
+                            else rps.file = null;
+                        });
+                    }
+
+                    if (periode.Pengantar.ModulPengantar.length > 0) {
+                        periode.Pengantar.ModulPengantar.forEach((modul) => {
+                            if (modul.file !== null) modul.file = `http://${req.headers.host}/public/modul-pengantar/${modul.file}`;
+                            else modul.file = null;
+                        });
+                    }
                 }
             });
             // urutkan pertemuan berdasarkan pertemuanKe
