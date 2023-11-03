@@ -3,7 +3,7 @@ import { Role, TugasStatus, User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as path from 'path';
 import * as fs from 'fs';
-import { TolakDto } from './dto';
+import { NilaiDto, TolakDto } from './dto';
 
 @Injectable()
 export class TugasService {
@@ -155,6 +155,26 @@ export class TugasService {
             if (dto.alasanTolak == null || dto.alasanTolak == '') throw new NotFoundException('Alasan tolak tidak boleh kosong');
             const tugasMahasiswa = await this.prisma.tugasMahasiswa.update({
                 data: { tugasStatus: TugasStatus.ditolak, alasanTolak: dto.alasanTolak, tanggalProses: new Date() },
+                where: { id: tugasMahasiswaId },
+                include: { tugas: true, mahasiswa: true }
+            })
+            return tugasMahasiswa
+        } catch (error) { throw error }
+    }
+
+    async nilaiTugasMahasiswa(user: User, tugasMahasiswaId: number, dto: NilaiDto) {
+        try {
+            if (user.role != Role.DOSEN) throw new NotFoundException('Anda tidak memiliki akses');
+            const checkTugas = await this.prisma.tugasMahasiswa.findUnique({
+                where: { id: tugasMahasiswaId }
+            })
+            if (!checkTugas) throw new NotFoundException('Tugas tidak ditemukan')
+            if (checkTugas.tugasStatus !== TugasStatus.diterima) throw new NotFoundException('Tugas belum diterima');
+            if (checkTugas.nilai != null) throw new NotFoundException('Tugas sudah dinilai');
+            // update tugas mahasiswa
+            if (dto.nilai < 0 || dto.nilai > 100) throw new NotFoundException('Nilai harus diantara 0-100');
+            const tugasMahasiswa = await this.prisma.tugasMahasiswa.update({
+                data: { nilai: dto.nilai },
                 where: { id: tugasMahasiswaId },
                 include: { tugas: true, mahasiswa: true }
             })
