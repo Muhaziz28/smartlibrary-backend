@@ -22,7 +22,12 @@ export class SesiMataKuliahService {
                                             ModulPengantar: true,
                                             Group: true,
                                         }
-                                    }, Pertemuan: true
+                                    }, Pertemuan: {
+                                        include: {
+                                            Tugas: true,
+                                            BahanAjar: true
+                                        }
+                                    }
                                 }
                             },
                             mataKuliah: { include: { prodi: true } }
@@ -34,6 +39,23 @@ export class SesiMataKuliahService {
             const response = sesiMataKuliah.map((sesi) => {
                 // Mengubah properti file dalam Pengantar jika pengantar tidak null
                 sesi.periodeMataKuliah.SesiMataKuliah.forEach((periode) => {
+                    if (periode.Pertemuan !== null) {
+                        periode.Pertemuan.forEach((pertemuan) => {
+                            if (pertemuan.Tugas.length > 0) {
+                                pertemuan.Tugas.forEach((tugas) => {
+                                    if (tugas.file !== null) tugas.file = `http://${req.headers.host}/public/tugas/${tugas.file}`;
+                                    else tugas.file = null;
+                                });
+                            }
+
+                            if (pertemuan.BahanAjar.length > 0) {
+                                pertemuan.BahanAjar.forEach((bahanAjar) => {
+                                    if (bahanAjar.file !== null) bahanAjar.file = `http://${req.headers.host}/public/bahan-ajar/${bahanAjar.file}`;
+                                    else bahanAjar.file = null;
+                                });
+                            }
+                        });
+                    }
                     if (periode.Pengantar !== null) {
                         if (periode.Pengantar.file !== null) periode.Pengantar.file = `http://${req.headers.host}/public/pengantar/${periode.Pengantar.file}`;
                         else periode.Pengantar.file = null;
@@ -132,7 +154,7 @@ export class SesiMataKuliahService {
                                             ModulPengantar: true,
                                             Group: true,
                                         }
-                                    }, Pertemuan: { include: { Tugas: true } }
+                                    }, Pertemuan: { include: { Tugas: true, BahanAjar: true } }
                                 }
                             },
                             mataKuliah: { include: { prodi: true } }
@@ -147,6 +169,23 @@ export class SesiMataKuliahService {
             });
             // Mengubah properti file dalam Pengantar
             sesiMataKuliah.periodeMataKuliah.SesiMataKuliah.forEach((periode) => {
+                if (periode.Pertemuan !== null) {
+                    periode.Pertemuan.forEach((pertemuan) => {
+                        if (pertemuan.Tugas.length > 0) {
+                            pertemuan.Tugas.forEach((tugas) => {
+                                if (tugas.file !== null) tugas.file = `http://${req.headers.host}/public/tugas/${tugas.file}`;
+                                else tugas.file = null;
+                            });
+                        }
+
+                        if (pertemuan.BahanAjar.length > 0) {
+                            pertemuan.BahanAjar.forEach((bahanAjar) => {
+                                if (bahanAjar.file !== null) bahanAjar.file = `http://${req.headers.host}/public/bahan-ajar/${bahanAjar.file}`;
+                                else bahanAjar.file = null;
+                            });
+                        }
+                    });
+                }
                 if (periode.Pengantar !== null) {
                     if (periode.Pengantar.file !== null) periode.Pengantar.file = `http://${req.headers.host}/public/pengantar/${periode.Pengantar.file}`;
                     else periode.Pengantar.file = null;
@@ -205,7 +244,7 @@ export class SesiMataKuliahService {
                 },
                 include: {
                     Pertemuan: {
-                        include: { Tugas: true }
+                        include: { Tugas: true, BahanAjar: true }
                     }
                 }
             })

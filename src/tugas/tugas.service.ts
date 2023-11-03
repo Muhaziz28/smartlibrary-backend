@@ -14,7 +14,7 @@ export class TugasService {
             const tugas = await this.prisma.tugas.findMany({ where: { pertemuanId: pertemuanId } })
             if (tugas.length === 0) throw new NotFoundException('Tugas tidak ditemukan');
             const tugasWithFile = tugas.map((tugas) => {
-                if (tugas.file != null) tugas.file = `${req.protocol}://${req.headers.host}/tugas/${tugas.file}`;
+                if (tugas.file != null) tugas.file = `${req.protocol}://${req.headers.host}/public/tugas/${tugas.file}`;
                 else tugas.file = null;
                 return tugas;
             });
@@ -26,7 +26,7 @@ export class TugasService {
         try {
             const tugas = await this.prisma.tugas.findUnique({ where: { id: id } })
             if (!tugas) throw new NotFoundException('Tugas tidak ditemukan');
-            if (tugas.file != null) tugas.file = `${req.protocol}://${req.headers.host}/tugas/${tugas.file}`;
+            if (tugas.file != null) tugas.file = `${req.protocol}://${req.headers.host}/public/tugas/${tugas.file}`;
             else tugas.file = null;
             return tugas;
         } catch (error) { throw error }
@@ -39,7 +39,7 @@ export class TugasService {
                     file: data.file,
                     link: data.link,
                     deskripsi: data.deskripsi,
-                    tanggal: data.tanggal,
+                    tanggalPengumpulan: data.tanggal,
                     pertemuanId: id,
                 }
             });
@@ -65,7 +65,7 @@ export class TugasService {
                     file: data.file,
                     link: data.link,
                     deskripsi: data.deskripsi,
-                    tanggal: data.tanggal,
+                    tanggalPengumpulan: data.tanggal,
                 },
                 where: { id: id }
             });

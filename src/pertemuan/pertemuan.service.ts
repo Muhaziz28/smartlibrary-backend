@@ -1,8 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { PertemuanDto } from './dto';
-import * as path from 'path';
-import * as fs from 'fs';
 
 @Injectable()
 export class PertemuanService {
@@ -12,33 +10,37 @@ export class PertemuanService {
         try {
             const pertemuan = await this.prisma.pertemuan.findUnique({
                 where: { id: id },
-                include: { Tugas: true }
+                include: { Tugas: true, BahanAjar: true }
             });
-            if (pertemuan.file != null) {
-                pertemuan.file = `http://${req.headers.host}/public/pertemuan/${pertemuan.file}`;
+            if (!pertemuan) throw new NotFoundException('Pertemuan tidak ditemukan');
+            if (pertemuan.BahanAjar.length > 0) {
+                pertemuan.BahanAjar.map((bahanAjar) => {
+                    if (bahanAjar.file != null) bahanAjar.file = `${req.protocol}://${req.headers.host}/public/bahan-ajar/${bahanAjar.file}`;
+                    else bahanAjar.file = null;
+                    return bahanAjar;
+                });
+            }
+            if (pertemuan.Tugas.length > 0) {
+                pertemuan.Tugas.map((tugas) => {
+                    if (tugas.file != null) tugas.file = `${req.protocol}://${req.headers.host}/public/tugas/${tugas.file}`;
+                    else tugas.file = null;
+                    return tugas;
+                });
             }
             return pertemuan;
         } catch (error) { return error }
     }
 
-    async updatePertemuan(data: any, id: number) {
+    async updatePertemuan(dto: PertemuanDto, id: number) {
         try {
             const checkPertemuan = await this.prisma.pertemuan.findUnique({ where: { id: id } });
-            if (checkPertemuan.file != null) {
-                const filePath = path.join(__dirname, '..', '..', 'public', 'pertemuan', checkPertemuan.file);
-                fs.unlink(filePath, (err) => {
-                    if (err) throw err;
-                });
-            }
+            if (!checkPertemuan) throw new NotFoundException('Pertemuan tidak ditemukan');
             const pertemuan = await this.prisma.pertemuan.update({
                 data: {
-                    file: data.file,
-                    link: data.link,
-                    deskripsi: data.deskripsi,
-                    tanggal: data.tanggal,
+                    tanggalPertemuan: dto.tanggalPertemuan,
                 },
                 where: { id: id },
-                include: { Tugas: true }
+                include: { Tugas: true, BahanAjar: true }
             });
             return pertemuan;
         } catch (error) { throw error }

@@ -24,13 +24,14 @@ import { TugasMahasiswaModule } from './tugas-mahasiswa/tugas-mahasiswa.module';
 import { RpsModule } from './rps/rps.module';
 import { ModulPengantarModule } from './modul-pengantar/modul-pengantar.module';
 import { GroupModule } from './group/group.module';
+import { BahanAjarModule } from './bahan-ajar/bahan-ajar.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    AuthModule, MahasiswaModule, DosenModule, PrismaModule, FakultasModule, ProdiModule, UserModule, PeriodeModule, AdminModule, MataKuliahModule, SesiMataKuliahModule, PeriodeMataKuliahModule, PengantarModule, PertemuanModule, MataKuliahDiambilModule, MataKuliahTersediaModule, MataKuliahDiajukanModule, TugasModule, TugasMahasiswaModule, RpsModule, ModulPengantarModule, GroupModule],
+    AuthModule, MahasiswaModule, DosenModule, PrismaModule, FakultasModule, ProdiModule, UserModule, PeriodeModule, AdminModule, MataKuliahModule, SesiMataKuliahModule, PeriodeMataKuliahModule, PengantarModule, PertemuanModule, MataKuliahDiambilModule, MataKuliahTersediaModule, MataKuliahDiajukanModule, TugasModule, TugasMahasiswaModule, RpsModule, ModulPengantarModule, GroupModule, BahanAjarModule],
   controllers: [UserController],
   providers: [],
 })

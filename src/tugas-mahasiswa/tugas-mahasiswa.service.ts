@@ -29,7 +29,7 @@ export class TugasMahasiswaService {
             // Jika upload tugas melewati batas pengumpulan
             const tugasMatakuliah = await this.prisma.tugas.findUnique({ where: { id: tugasId } })
             if (!tugasMatakuliah) throw new NotFoundException('Tugas tidak ditemukan');
-            if (tugasMatakuliah.tanggal < new Date()) throw new NotFoundException('Waktu pengumpulan tugas telah berakhir');
+            if (tugasMatakuliah.tanggalPengumpulan < new Date()) throw new NotFoundException('Waktu pengumpulan tugas telah berakhir');
             // Jika sudah mengumpulkan tugas, ada tugas pending
             const tugasMahasiswaPending = await this.prisma.tugasMahasiswa.findFirst({ where: { tugasId: tugasId, nim: userIsMahasiswa.nim, tugasStatus: TugasStatus.pending } })
             if (tugasMahasiswaPending) throw new NotFoundException('Tugas anda masih dalam proses review oleh dosen, silahkan tunggu');
