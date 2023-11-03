@@ -1,9 +1,10 @@
 import { UploadedFile } from "@nestjs/common";
-import { IsInt, IsOptional, IsString } from "class-validator";
+import { IsInt, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class AddPengantarDto {
-
-    sesiMataKuliahId: number;
+    @IsString()
+    @IsOptional()
+    deskripsi: string;
 
     @IsString()
     @IsOptional()
@@ -11,5 +12,5 @@ export class AddPengantarDto {
 
     @IsString()
     @IsOptional()
-    deskripsi: string;
+    video: string;
 }

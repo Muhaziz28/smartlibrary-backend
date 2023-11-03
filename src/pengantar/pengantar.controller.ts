@@ -13,7 +13,7 @@ export class PengantarController {
         return this.pengantarService.getPengantar(id, req);
     }
 
-    @Post()
+    @Post(':sesiMataKuliahId')
     @UseInterceptors(FileInterceptor('file', {
         storage: diskStorage({
             destination: './public/pengantar',
@@ -27,32 +27,27 @@ export class PengantarController {
             fileSize: 10 * 1024 * 1024, // 10MB
         }
     }))
-    addPengantar(@UploadedFile() file?: Express.Multer.File, @Body() addPengantarDto?: AddPengantarDto) {
-        let sesiMataKuliahId: number;
-        if (addPengantarDto.sesiMataKuliahId) {
-            sesiMataKuliahId = parseInt(addPengantarDto.sesiMataKuliahId.toString(), 10);
-            if (isNaN(sesiMataKuliahId)) {
-                throw new BadRequestException('Invalid sesiMataKuliahId');
-            }
-        }
-
+    addPengantar(@Body() dto: AddPengantarDto, @Param('sesiMataKuliahId', ParseIntPipe) sesiMataKuliahId: number, @UploadedFile() file?: Express.Multer.File) {
         let data: any;
 
         if (file == null) {
             data = {
-                sesiMataKuliahId,
-                link: addPengantarDto.link,
-                deskripsi: addPengantarDto.deskripsi,
+                sesiMataKuliahId: sesiMataKuliahId,
+                link: dto.link,
+                deskripsi: dto.deskripsi,
+                video: dto.video,
+                file: null,
             }
         } else {
             data = {
-                sesiMataKuliahId,
-                link: addPengantarDto.link,
-                deskripsi: addPengantarDto.deskripsi,
+                sesiMataKuliahId: sesiMataKuliahId,
+                link: dto.link,
+                deskripsi: dto.deskripsi,
+                video: dto.video,
                 file: file.filename,
             }
         }
-        return this.pengantarService.addPengantar(data);
+        return this.pengantarService.addPengantar(data, dto, sesiMataKuliahId);
     }
 
     @Put(':id')
@@ -67,24 +62,14 @@ export class PengantarController {
         })
     }))
     updatePengantar(@Param('id', ParseIntPipe) id: number, @UploadedFile() file?: Express.Multer.File, @Body() addPengantarDto?: AddPengantarDto) {
-        let sesiMataKuliahId: number;
-        if (addPengantarDto.sesiMataKuliahId) {
-            sesiMataKuliahId = parseInt(addPengantarDto.sesiMataKuliahId.toString(), 10);
-            if (isNaN(sesiMataKuliahId)) {
-                throw new BadRequestException('Invalid sesiMataKuliahId');
-            }
-        }
-
         let data: any;
         if (file == null) {
             data = {
-                sesiMataKuliahId,
                 link: addPengantarDto.link,
                 deskripsi: addPengantarDto.deskripsi,
             }
         } else {
             data = {
-                sesiMataKuliahId,
                 link: addPengantarDto.link,
                 deskripsi: addPengantarDto.deskripsi,
                 file: file.filename,

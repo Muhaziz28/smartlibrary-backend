@@ -8,31 +8,34 @@ import * as fs from 'fs';
 export class PengantarService {
     constructor(private prisma: PrismaService) { }
 
-    async addPengantar(data: any) {
+    async addPengantar(data: any, dto: AddPengantarDto, sesiMataKuliahId: number) {
         try {
             const sesiMataKuliah = await this.prisma.sesiMataKuliah.findUnique({
-                where: { id: data.sesiMataKuliahId },
+                where: { id: sesiMataKuliahId },
             });
             if (!sesiMataKuliah) throw new NotFoundException('Sesi Mata Kuliah tidak ditemukan');
             const pengantar = await this.prisma.pengantar.create({
                 data: {
-                    sesiMataKuliahId: data.sesiMataKuliahId,
-                    link: data.link,
-                    deskripsi: data.deskripsi,
+                    sesiMataKuliahId: sesiMataKuliahId,
+                    link: dto.link,
+                    deskripsi: dto.deskripsi,
                     file: data.file,
-                    video: data.video,
+                    video: dto.video,
                 },
                 include: { sesiMataKuliah: true }
             });
             return pengantar;
-        } catch (error) { throw error }
+        } catch (error) {
+            if (error.code === 'P2002') throw new ConflictException('Pengantar sudah ada');
+            throw error
+        }
     }
 
     async getPengantar(id: number, req: any) {
         try {
             const sesiMataKuliah = await this.prisma.sesiMataKuliah.findUnique({ where: { id } });
             if (!sesiMataKuliah) throw new NotFoundException('Sesi Mata Kuliah tidak ditemukan');
-            const pengantar = await this.prisma.pengantar.findFirst({
+            const pengantar = await this.prisma.pengantar.findMany({
                 where: { sesiMataKuliahId: id },
                 include: {
                     Rps: true,
@@ -41,9 +44,11 @@ export class PengantarService {
                 }
             });
             if (!pengantar) throw new NotFoundException('Pengantar tidak ditemukan');
-            if (pengantar.file) { pengantar.file = `http://${req.headers.host}/public/pengantar/${pengantar.file}`; }
-            pengantar.Rps.forEach(rps => {
-                if (rps.file) { rps.file = `http://${req.headers.host}/public/rps/${rps.file}`; }
+            pengantar.forEach((pengantar) => {
+                if (pengantar.file) { pengantar.file = `http://${req.headers.host}/public/pengantar/${pengantar.file}`; }
+                pengantar.Rps.forEach(rps => {
+                    if (rps.file) { rps.file = `http://${req.headers.host}/public/rps/${rps.file}`; }
+                });
             });
             return pengantar;
         } catch (error) { throw error }
@@ -62,9 +67,9 @@ export class PengantarService {
             const updatedPengantar = await this.prisma.pengantar.update({
                 where: { id },
                 data: {
-                    link: data.link,
                     deskripsi: data.deskripsi,
                     file: data.file,
+                    link: data.link,
                     video: data.video,
                 },
                 include: { sesiMataKuliah: true, }
