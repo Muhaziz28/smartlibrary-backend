@@ -35,7 +35,7 @@ export class PengantarService {
         try {
             const sesiMataKuliah = await this.prisma.sesiMataKuliah.findUnique({ where: { id } });
             if (!sesiMataKuliah) throw new NotFoundException('Sesi Mata Kuliah tidak ditemukan');
-            const pengantar = await this.prisma.pengantar.findMany({
+            const pengantar = await this.prisma.pengantar.findFirst({
                 where: { sesiMataKuliahId: id },
                 include: {
                     Rps: true,
@@ -44,11 +44,10 @@ export class PengantarService {
                 }
             });
             if (!pengantar) throw new NotFoundException('Pengantar tidak ditemukan');
-            pengantar.forEach((pengantar) => {
-                if (pengantar.file) { pengantar.file = `http://${req.headers.host}/public/pengantar/${pengantar.file}`; }
-                pengantar.Rps.forEach(rps => {
-                    if (rps.file) { rps.file = `http://${req.headers.host}/public/rps/${rps.file}`; }
-                });
+            if (pengantar.file) { pengantar.file = `http://${req.headers.host}/public/pengantar/${pengantar.file}`; }
+            pengantar.Rps.forEach(rps => {
+                if (rps.file) { rps.file = `http://${req.headers.host}/public/rps/${rps.file}`; }
+
             });
             return pengantar;
         } catch (error) { throw error }
