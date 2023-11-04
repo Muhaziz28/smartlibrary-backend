@@ -56,25 +56,23 @@ export class SesiMataKuliahService {
                             }
                         });
                     }
-                    if (periode.Pengantar !== null || periode.Pengantar.length > 0) {
-                        periode.Pengantar.forEach((pengantar) => {
-                            if (pengantar.file !== null) pengantar.file = `http://${req.headers.host}/public/pengantar/${pengantar.file}`;
-                            else pengantar.file = null;
+                    if (periode.Pengantar !== null) {
+                        if (periode.Pengantar.file !== null) periode.Pengantar.file = `http://${req.headers.host}/public/pengantar/${periode.Pengantar.file}`;
+                        else periode.Pengantar.file = null;
 
-                            if (pengantar.Rps.length > 0) {
-                                pengantar.Rps.forEach((rps) => {
-                                    if (rps.file !== null) rps.file = `http://${req.headers.host}/public/rps/${rps.file}`;
-                                    else rps.file = null;
-                                });
-                            }
+                        if (periode.Pengantar.Rps.length > 0) {
+                            periode.Pengantar.Rps.forEach((rps) => {
+                                if (rps.file !== null) rps.file = `http://${req.headers.host}/public/rps/${rps.file}`;
+                                else rps.file = null;
+                            });
+                        }
 
-                            if (pengantar.ModulPengantar.length > 0) {
-                                pengantar.ModulPengantar.forEach((modul) => {
-                                    if (modul.file !== null) modul.file = `http://${req.headers.host}/public/modul-pengantar/${modul.file}`;
-                                    else modul.file = null;
-                                });
-                            }
-                        });
+                        if (periode.Pengantar.ModulPengantar.length > 0) {
+                            periode.Pengantar.ModulPengantar.forEach((modul) => {
+                                if (modul.file !== null) modul.file = `http://${req.headers.host}/public/modul-pengantar/${modul.file}`;
+                                else modul.file = null;
+                            });
+                        }
                     }
 
                 });
@@ -112,31 +110,26 @@ export class SesiMataKuliahService {
             const response = sesiMataKuliah.map((sesi) => {
                 // Mengubah properti file dalam Pengantar
                 sesi.periodeMataKuliah.SesiMataKuliah.forEach((periode) => {
-                    periode.Pengantar.forEach((pengantar) => {
-                        if (periode.Pengantar !== null) {
-                            if (pengantar.file !== null) pengantar.file = `http://${req.headers.host}/public/pengantar/${pengantar.file}`;
-                            else pengantar.file = null;
+                    if (periode.Pengantar !== null) {
+                        if (periode.Pengantar.file !== null) periode.Pengantar.file = `http://${req.headers.host}/public/pengantar/${periode.Pengantar.file}`;
+                        else periode.Pengantar.file = null;
 
-                            if (pengantar.Rps.length > 0) {
-                                pengantar.Rps.forEach((rps) => {
-                                    if (rps.file !== null) rps.file = `http://${req.headers.host}/public/rps/${rps.file}`;
-                                    else rps.file = null;
-                                });
-                            }
-
-                            if (pengantar.ModulPengantar.length > 0) {
-                                pengantar.ModulPengantar.forEach((modul) => {
-                                    if (modul.file !== null) modul.file = `http://${req.headers.host}/public/modul-pengantar/${modul.file}`;
-                                    else modul.file = null;
-                                });
-                            }
+                        if (periode.Pengantar.Rps.length > 0) {
+                            periode.Pengantar.Rps.forEach((rps) => {
+                                if (rps.file !== null) rps.file = `http://${req.headers.host}/public/rps/${rps.file}`;
+                                else rps.file = null;
+                            });
                         }
-                    })
 
+                        if (periode.Pengantar.ModulPengantar.length > 0) {
+                            periode.Pengantar.ModulPengantar.forEach((modul) => {
+                                if (modul.file !== null) modul.file = `http://${req.headers.host}/public/modul-pengantar/${modul.file}`;
+                                else modul.file = null;
+                            });
+                        }
+                    }
                 });
-                return {
-                    ...sesi,
-                };
+                return { ...sesi }
             });
             return response;
         } catch (error) { throw error }
@@ -193,24 +186,22 @@ export class SesiMataKuliahService {
                     });
                 }
                 if (periode.Pengantar !== null) {
-                    periode.Pengantar.forEach((pengantar) => {
-                        if (pengantar.file !== null) pengantar.file = `http://${req.headers.host}/public/pengantar/${pengantar.file}`;
-                        else pengantar.file = null;
+                    if (periode.Pengantar.file !== null) periode.Pengantar.file = `http://${req.headers.host}/public/pengantar/${periode.Pengantar.file}`;
+                    else periode.Pengantar.file = null;
 
-                        if (pengantar.Rps.length > 0) {
-                            pengantar.Rps.forEach((rps) => {
-                                if (rps.file !== null) rps.file = `http://${req.headers.host}/public/rps/${rps.file}`;
-                                else rps.file = null;
-                            });
-                        }
+                    if (periode.Pengantar.Rps.length > 0) {
+                        periode.Pengantar.Rps.forEach((rps) => {
+                            if (rps.file !== null) rps.file = `http://${req.headers.host}/public/rps/${rps.file}`;
+                            else rps.file = null;
+                        });
+                    }
 
-                        if (pengantar.ModulPengantar.length > 0) {
-                            pengantar.ModulPengantar.forEach((modul) => {
-                                if (modul.file !== null) modul.file = `http://${req.headers.host}/public/modul-pengantar/${modul.file}`;
-                                else modul.file = null;
-                            });
-                        }
-                    });
+                    if (periode.Pengantar.ModulPengantar.length > 0) {
+                        periode.Pengantar.ModulPengantar.forEach((modul) => {
+                            if (modul.file !== null) modul.file = `http://${req.headers.host}/public/modul-pengantar/${modul.file}`;
+                            else modul.file = null;
+                        });
+                    }
                 }
             });
             // urutkan pertemuan berdasarkan pertemuanKe
