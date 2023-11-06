@@ -57,7 +57,7 @@ export class PengantarService {
         try {
             const pengantar = await this.prisma.pengantar.findUnique({ where: { id } })
             if (!pengantar) throw new NotFoundException('Pengantar tidak ditemukan');
-            if (pengantar.file) {
+            if (pengantar.file != null) {
                 const filePath = path.join(__dirname, '..', '..', 'public', 'pengantar', pengantar.file);
                 fs.unlink(filePath, (err) => {
                     if (err) throw err;
