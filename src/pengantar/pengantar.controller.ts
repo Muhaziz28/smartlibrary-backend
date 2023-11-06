@@ -67,6 +67,7 @@ export class PengantarController {
             data = {
                 link: addPengantarDto.link,
                 deskripsi: addPengantarDto.deskripsi,
+                file: null,
             }
         } else {
             data = {
