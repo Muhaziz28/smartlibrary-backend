@@ -170,8 +170,27 @@ export class TugasService {
             })
             if (!checkTugas) throw new NotFoundException('Tugas tidak ditemukan')
             if (checkTugas.tugasStatus !== TugasStatus.diterima) throw new NotFoundException('Tugas belum diterima');
-            if (checkTugas.nilai != null) throw new NotFoundException('Tugas sudah dinilai');
+
             // update tugas mahasiswa
+            if (dto.nilai < 0 || dto.nilai > 100) throw new NotFoundException('Nilai harus diantara 0-100');
+            const tugasMahasiswa = await this.prisma.tugasMahasiswa.update({
+                data: { nilai: dto.nilai },
+                where: { id: tugasMahasiswaId },
+                include: { tugas: true, mahasiswa: true }
+            })
+            return tugasMahasiswa
+        } catch (error) { throw error }
+    }
+
+    async updateNilaiTugasMahasiswa(user: User, tugasMahasiswaId: number, dto: NilaiDto) {
+        try {
+            if (user.role != Role.DOSEN) throw new NotFoundException('Anda tidak memiliki akses');
+            const checkTugas = await this.prisma.tugasMahasiswa.findUnique({
+                where: { id: tugasMahasiswaId }
+            })
+            if (!checkTugas) throw new NotFoundException('Tugas tidak ditemukan')
+            if (checkTugas.tugasStatus !== TugasStatus.diterima) throw new NotFoundException('Tugas belum diterima');
+
             if (dto.nilai < 0 || dto.nilai > 100) throw new NotFoundException('Nilai harus diantara 0-100');
             const tugasMahasiswa = await this.prisma.tugasMahasiswa.update({
                 data: { nilai: dto.nilai },

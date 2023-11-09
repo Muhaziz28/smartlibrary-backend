@@ -64,7 +64,7 @@ export class DosenService {
                 }
             });
             const hashPassword = await argon.hash(dto.nip);
-            await this.prisma.user.create({
+            const user = await this.prisma.user.create({
                 data: {
                     username: dto.nip,
                     password: hashPassword,

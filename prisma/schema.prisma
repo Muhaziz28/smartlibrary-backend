@@ -21,6 +21,7 @@ model Mahasiswa {
   MataKuliahDiajukan MataKuliahDiajukan[]
   MataKuliahDiambil  MataKuliahDiambil[]
   TugasMahasiswa     TugasMahasiswa[]
+  PresensiMahasiswa  PresensiMahasiswa[]
 
   @@map("mahasiswa")
 }
@@ -123,6 +124,7 @@ model SesiMataKuliah {
   Pertemuan           Pertemuan[]
   MataKuliahDiajukan  MataKuliahDiajukan[]
   MataKuliahDiambil   MataKuliahDiambil[]
+  Presensi            Presensi[]
 
   @@map("sesi_mata_kuliah")
 }
@@ -191,6 +193,7 @@ model Pertemuan {
   tanggalPertemuan DateTime?      @map("tanggal_pertemuan")
   Tugas            Tugas[]
   BahanAjar        BahanAjar[]
+  Presensi         Presensi?
 
   @@map("pertemuan")
 }
@@ -269,4 +272,48 @@ model BahanAjar {
   video       String?
 
   @@map("bahan_ajar")
+}
+
+enum JenisAbsensi {
+  daring
+  luring
+}
+
+model Presensi {
+  id                Int                 @id @default(autoincrement())
+  sesiMataKuliah    SesiMataKuliah      @relation(fields: [sesiMataKuliahId], references: [id])
+  sesiMataKuliahId  Int                 @map("sesi_mata_kuliah_id")
+  pertemuan         Pertemuan           @relation(fields: [pertemuanId], references: [id])
+  pertemuanId       Int                 @unique @map("pertemuan_id")
+  jenisAbsensi      JenisAbsensi        @map("jenis_absensi")
+  limitWaktu        DateTime?           @map("limit_waktu")
+  PresensiMahasiswa PresensiMahasiswa[]
+
+  @@map("presensi")
+}
+
+enum StatusKehadiran {
+  hadir
+  tidakHadir
+}
+
+enum StatusPresensiMahasiswa {
+  pending
+  diterima
+  ditolak
+}
+
+model PresensiMahasiswa {
+  id              Int                     @id @default(autoincrement())
+  presensi        Presensi                @relation(fields: [presensiId], references: [id])
+  presensiId      Int                     @map("presensi_id")
+  mahasiswa       Mahasiswa               @relation(fields: [nim], references: [nim])
+  nim             String                  @map("nim")
+  statusKehadiran StatusKehadiran         @map("status_kehadiran")
+  catatan         String?
+  jamMasuk        DateTime?               @map("jam_masuk")
+  statusPresensi  StatusPresensiMahasiswa @default(pending) @map("status_presensi")
+  alasanTolak     String?                 @map("alasan_tolak")
+
+  @@map("presensi_mahasiswa")
 }
