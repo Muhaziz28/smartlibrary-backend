@@ -16,6 +16,8 @@ export class PresensiService {
                 }
             })
 
+            sesiMataKuliah.Pertemuan.sort((a, b) => a.pertemuanKe - b.pertemuanKe)
+
             return sesiMataKuliah
         } catch (error) {
             throw error
