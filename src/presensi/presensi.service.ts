@@ -27,7 +27,7 @@ export class PresensiService {
             const jenisPresensi = await this.prisma.presensi.create({
                 data: {
                     jenisAbsensi: JenisAbsensi[dto.jenisAbsensi],
-                    limitWaktu: dto.limitWaktu,
+                    limitWaktu: new Date(dto.limitWaktu),
                     pertemuanId: pertemuanId,
                     sesiMataKuliahId: dto.sesiMataKuliahId,
                 }
@@ -84,6 +84,40 @@ export class PresensiService {
         }
     }
 
+    async detailPresensiPerMahasiswa(id: number, user: User) {
+        try {
+            const presensiData = await this.prisma.presensi.findUnique({
+                where: { id },
+            })
+            if (!presensiData) throw new ConflictException('Presensi tidak ditemukan');
+
+            const mahasiswa = await this.prisma.mahasiswa.findUnique({
+                where: {
+                    nim: user.username
+                }
+            })
+            console.log(mahasiswa.nim);
+            const presensiMahasiswa = await this.prisma.presensiMahasiswa.findFirst({
+                where: { presensiId: presensiData.id, nim: mahasiswa.nim },
+            })
+
+            // gabungkan data mahasiswa dengan data presensi mahasiswa
+
+
+            const data = {
+                ...mahasiswa,
+                absensi: presensiMahasiswa
+            }
+
+            return {
+                presensi: presensiData,
+                data
+            }
+        } catch (error) {
+            throw error
+        }
+    }
+
     async addStatusPresensiMahasiswa(presensiId: number, dto: PresensiByDosenDto) {
         try {
             const checkPresensi = await this.prisma.presensiMahasiswa.findFirst({
@@ -117,6 +151,12 @@ export class PresensiService {
                 where: { presensiId: presensiId, nim: user.username }
             })
             if (presensi) throw new ConflictException('Anda sudah absen masuk');
+
+            const presensiData = await this.prisma.presensi.findUnique({
+                where: { id: presensiId }
+            })
+            const date = new Date()
+            if (presensiData.limitWaktu < date) throw new ConflictException('Waktu absen sudah habis');
 
             const presensiMahasiswa = await this.prisma.presensiMahasiswa.create({
                 data: {

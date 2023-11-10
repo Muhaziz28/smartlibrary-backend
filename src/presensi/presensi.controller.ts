@@ -25,6 +25,11 @@ export class PresensiController {
         return this.presensiService.detailPresensi(id);
     }
 
+    @Get('detail/mahasiswa/:id')
+    getDetailPresensiPerMahasiswa(@Param('id', ParseIntPipe) id: number, @GetUser() user: User) {
+        return this.presensiService.detailPresensiPerMahasiswa(id, user);
+    }
+
     @Post('presensi-mahasiswa/:presensiId')
     addpresensiMahasiswa(@Param('presensiId', ParseIntPipe) presensiId: number, @Body() dto: PresensiByDosenDto) {
         return this.presensiService.addStatusPresensiMahasiswa(presensiId, dto);
