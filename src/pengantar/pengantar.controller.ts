@@ -67,12 +67,15 @@ export class PengantarController {
             data = {
                 link: addPengantarDto.link,
                 deskripsi: addPengantarDto.deskripsi,
+                file: null,
+                video: addPengantarDto.video,
             }
         } else {
             data = {
                 link: addPengantarDto.link,
                 deskripsi: addPengantarDto.deskripsi,
                 file: file.filename,
+                video: addPengantarDto.video,
             }
         }
         return this.pengantarService.updatePengantar(id, data);
