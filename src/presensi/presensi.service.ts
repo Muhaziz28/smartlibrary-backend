@@ -42,10 +42,10 @@ export class PresensiService {
         }
     }
 
-    async detailPresensi(id: number) {
+    async detailPresensi(sesiMataKuliahId: number, pertemuanId: number) {
         try {
-            const presensi = await this.prisma.presensi.findUnique({
-                where: { id },
+            const presensi = await this.prisma.presensi.findFirst({
+                where: { sesiMataKuliahId: sesiMataKuliahId, pertemuanId: pertemuanId, },
             })
             if (!presensi) throw new ConflictException('Presensi tidak ditemukan');
 

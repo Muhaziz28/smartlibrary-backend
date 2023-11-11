@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { JwtGuard } from 'src/auth/guard';
 import { PresensiService } from './presensi.service';
 import { GetUser } from 'src/auth/decorator';
@@ -20,9 +20,9 @@ export class PresensiController {
         return this.presensiService.addJenisPresensi(dto, pertemuanId);
     }
 
-    @Get('detail/:id')
-    getDetailPresensi(@Param('id', ParseIntPipe) id: number) {
-        return this.presensiService.detailPresensi(id);
+    @Get('detail/:sesiMataKuliahId/:pertemuanId')
+    detailPresensi(@Param('sesiMataKuliahId', ParseIntPipe) sesiMataKuliahId: number, @Param('pertemuanId', ParseIntPipe) pertemuanId: number) {
+        return this.presensiService.detailPresensi(sesiMataKuliahId, pertemuanId);
     }
 
     @Get('detail/mahasiswa/:id')
