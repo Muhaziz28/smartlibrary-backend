@@ -29,7 +29,7 @@ export class PresensiService {
             const jenisPresensi = await this.prisma.presensi.create({
                 data: {
                     jenisAbsensi: JenisAbsensi[dto.jenisAbsensi],
-                    limitWaktu: new Date(dto.limitWaktu),
+                    limitWaktu: dto.limitWaktu ? new Date(dto.limitWaktu) : null,
                     pertemuanId: pertemuanId,
                     sesiMataKuliahId: dto.sesiMataKuliahId,
                 }
