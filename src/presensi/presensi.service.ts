@@ -158,8 +158,9 @@ export class PresensiService {
                 where: { id: presensiId }
             })
             const date = new Date()
-            if (presensiData.limitWaktu < date) throw new ConflictException('Waktu absen sudah habis');
-
+            if (presensiData.limitWaktu != null) {
+                if (presensiData.limitWaktu < date) throw new ConflictException('Waktu absen sudah habis');
+            }
             const presensiMahasiswa = await this.prisma.presensiMahasiswa.create({
                 data: {
                     presensiId: presensiId,
