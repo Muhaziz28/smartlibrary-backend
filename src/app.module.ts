@@ -26,14 +26,14 @@ import { ModulPengantarModule } from './modul-pengantar/modul-pengantar.module';
 import { GroupModule } from './group/group.module';
 import { BahanAjarModule } from './bahan-ajar/bahan-ajar.module';
 import { PresensiModule } from './presensi/presensi.module';
+import { TelegramModule } from './telegram/telegram.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    AuthModule, MahasiswaModule, DosenModule, PrismaModule, FakultasModule, ProdiModule, UserModule, PeriodeModule, AdminModule, MataKuliahModule, SesiMataKuliahModule, PeriodeMataKuliahModule, PengantarModule, PertemuanModule, MataKuliahDiambilModule, MataKuliahTersediaModule, MataKuliahDiajukanModule, TugasModule, TugasMahasiswaModule, RpsModule, ModulPengantarModule, GroupModule, BahanAjarModule, PresensiModule],
+    AuthModule, MahasiswaModule, DosenModule, PrismaModule, FakultasModule, ProdiModule, UserModule, PeriodeModule, AdminModule, MataKuliahModule, SesiMataKuliahModule, PeriodeMataKuliahModule, PengantarModule, PertemuanModule, MataKuliahDiambilModule, MataKuliahTersediaModule, MataKuliahDiajukanModule, TugasModule, TugasMahasiswaModule, RpsModule, ModulPengantarModule, GroupModule, BahanAjarModule, PresensiModule, TelegramModule],
   controllers: [UserController],
-  providers: [],
 })
 export class AppModule { }

@@ -13,7 +13,7 @@ datasource db {
 model Mahasiswa {
   nim                String               @id
   nama               String
-  email              String               @unique
+  email              String?              @unique
   usernameTelegram   String?              @unique @map("username_telegram")
   noTelp             String?              @unique @map("no_telp")
   prodi              Prodi?               @relation(fields: [prodiId], references: [id])
@@ -46,7 +46,7 @@ model User {
 model Dosen {
   nip              String           @id
   nama             String
-  email            String           @unique
+  email            String?          @unique
   usernameTelegram String?          @unique @map("username_telegram")
   noTelp           String?          @unique @map("no_telp")
   fakultas         Fakultas         @relation(fields: [fakultasId], references: [id])
@@ -118,13 +118,16 @@ model SesiMataKuliah {
   periodeMataKuliahId Int                  @map("periode_mata_kuliah_id")
   kodeSesi            String               @map("kode_sesi")
   jadwal              String
-  dosen               Dosen                @relation(fields: [nip], references: [nip])
-  nip                 String
+  // dosen               Dosen                @relation(fields: [nip], references: [nip])
+  // nip                 String               @map("nip")
   Pengantar           Pengantar?
   Pertemuan           Pertemuan[]
   MataKuliahDiajukan  MataKuliahDiajukan[]
   MataKuliahDiambil   MataKuliahDiambil[]
   Presensi            Presensi[]
+  // dosen can have many sesi mata kuliah
+  dosen               Dosen                @relation(fields: [nip], references: [nip])
+  nip                 String               @map("nip")
 
   @@map("sesi_mata_kuliah")
 }

@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
+import { ForbiddenException, Injectable, NotFoundException, OnModuleInit } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { AuthDto, LoginDto, NimDto } from "./dto";
 import * as argon from "argon2";
@@ -8,10 +8,22 @@ import { ConfigService } from "@nestjs/config";
 import { Role } from "@prisma/client";
 import { json } from "express";
 import { FakultasService } from "src/fakultas/fakultas.service";
+import * as TelegramBot from 'node-telegram-bot-api';
+import { TelegramService } from "src/telegram/telegram.service";
+
 
 @Injectable()
 export class AuthService {
-    constructor(private prisma: PrismaService, private jwt: JwtService, private config: ConfigService) { }
+    constructor(
+        private prisma: PrismaService,
+        private jwt: JwtService,
+        private config: ConfigService,
+        private telegramService: TelegramService,
+    ) { }
+
+    bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, { polling: true });
+
+
 
     async getNim(dto: NimDto) {
         try {
@@ -57,6 +69,8 @@ export class AuthService {
         }
     }
 
+
+
     async login(dto: LoginDto) {
         try {
             const user = await this.prisma.user.findUnique({ where: { username: dto.username } })
@@ -68,6 +82,10 @@ export class AuthService {
             const token = await this.singToken(user.id, user.username, user.role);
             // Password tidak disertakan pada response
             delete user.password;
+
+            // send message
+            await this.telegramService.sendAdminMessage(`User dengan username ${user.username} berhasil login.`);
+
             return { ...token, user: user, }
         }
         catch (error) { throw error; }
