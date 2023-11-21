@@ -2,6 +2,7 @@ import { ForbiddenException, Injectable, NotFoundException, OnModuleInit } from 
 import { PrismaService } from "src/prisma/prisma.service";
 import { AuthDto, LoginDto, NimDto } from "./dto";
 import * as argon from "argon2";
+import * as bcrypt from "bcrypt";
 import { JwtService } from "@nestjs/jwt";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { ConfigService } from "@nestjs/config";
@@ -23,8 +24,6 @@ export class AuthService {
 
     bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, { polling: true });
 
-
-
     async getNim(dto: NimDto) {
         try {
             const nimMahasiswa = await this.prisma.mahasiswa.findUnique({ where: { nim: dto.nim } })
@@ -39,7 +38,8 @@ export class AuthService {
     }
 
     async signupMahasiswa(dto: AuthDto) {
-        const hash = await argon.hash(dto.password);
+        // const hash = await argon.hash(dto.password);
+        const hash = await bcrypt.hash(dto.password, 10);
         // save user to db
         try {
             const mahasiswa = await this.prisma.mahasiswa.findUnique({ where: { nim: dto.username } })
@@ -69,27 +69,33 @@ export class AuthService {
         }
     }
 
-
-
     async login(dto: LoginDto) {
         try {
-            const user = await this.prisma.user.findUnique({ where: { username: dto.username } })
-            // Jika data user tidak ditemukan
-            if (!user) throw new ForbiddenException("Username atau password salah")
-            // Jika password tidak cocok
-            const isPasswordMatch = await argon.verify(user.password, dto.password);
-            if (!isPasswordMatch) throw new ForbiddenException("Username atau password salah")
+            const user = await this.prisma.user.findUnique({ where: { username: dto.username } });
+
+            if (!user) {
+                throw new ForbiddenException("Username atau password salah");
+            }
+
+            const hash = await bcrypt.hash(dto.password, 10);
+            console.log(hash);
+
+            const isPasswordMatch = bcrypt.compareSync(dto.password, user.password);
+            console.log(isPasswordMatch);
+            if (!isPasswordMatch) {
+                throw new ForbiddenException("Username atau password salah");
+            }
+
             const token = await this.singToken(user.id, user.username, user.role);
-            // Password tidak disertakan pada response
+            // Password not included in the response
             delete user.password;
 
-            // send message
-            await this.telegramService.sendAdminMessage(`User dengan username ${user.username} berhasil login.`);
-
-            return { ...token, user: user, }
+            return { ...token, user: user };
+        } catch (error) {
+            throw error;
         }
-        catch (error) { throw error; }
     }
+
 
     async singToken(userId: number, username: string, role: string): Promise<{ access_token: string }> {
         const payload = {

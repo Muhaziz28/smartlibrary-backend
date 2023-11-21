@@ -34,6 +34,6 @@ import { TelegramModule } from './telegram/telegram.module';
       isGlobal: true,
     }),
     AuthModule, MahasiswaModule, DosenModule, PrismaModule, FakultasModule, ProdiModule, UserModule, PeriodeModule, AdminModule, MataKuliahModule, SesiMataKuliahModule, PeriodeMataKuliahModule, PengantarModule, PertemuanModule, MataKuliahDiambilModule, MataKuliahTersediaModule, MataKuliahDiajukanModule, TugasModule, TugasMahasiswaModule, RpsModule, ModulPengantarModule, GroupModule, BahanAjarModule, PresensiModule, TelegramModule],
-  controllers: [UserController],
+
 })
 export class AppModule { }

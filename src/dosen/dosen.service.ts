@@ -3,6 +3,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateDosenDto, UpdateDosenDto } from './dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import * as argon from "argon2";
+import * as brcypt from "bcrypt";
 import { Role } from '@prisma/client';
 
 @Injectable()
@@ -63,7 +64,7 @@ export class DosenService {
                     fakultasId: dto.fakultasId
                 }
             });
-            const hashPassword = await argon.hash(dto.nip);
+            const hashPassword = await brcypt.hash(dto.nip, 10);
             const user = await this.prisma.user.create({
                 data: {
                     username: dto.nip,

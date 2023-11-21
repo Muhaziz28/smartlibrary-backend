@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -16,20 +13,14 @@ model Mahasiswa {
   email              String?              @unique
   usernameTelegram   String?              @unique @map("username_telegram")
   noTelp             String?              @unique @map("no_telp")
-  prodi              Prodi?               @relation(fields: [prodiId], references: [id])
   prodiId            Int?                 @map("prodi_id")
+  prodi              Prodi?               @relation(fields: [prodiId], references: [id])
   MataKuliahDiajukan MataKuliahDiajukan[]
   MataKuliahDiambil  MataKuliahDiambil[]
-  TugasMahasiswa     TugasMahasiswa[]
   PresensiMahasiswa  PresensiMahasiswa[]
+  TugasMahasiswa     TugasMahasiswa[]
 
   @@map("mahasiswa")
-}
-
-enum Role {
-  ADMIN
-  MAHASISWA
-  DOSEN
 }
 
 model User {
@@ -37,8 +28,8 @@ model User {
   username String @unique
   password String
   role     Role
-  prodi    Prodi? @relation(fields: [prodiId], references: [id])
   prodiId  Int?   @map("prodi_id")
+  prodi    Prodi? @relation(fields: [prodiId], references: [id])
 
   @@map("users")
 }
@@ -49,8 +40,8 @@ model Dosen {
   email            String?          @unique
   usernameTelegram String?          @unique @map("username_telegram")
   noTelp           String?          @unique @map("no_telp")
-  fakultas         Fakultas         @relation(fields: [fakultasId], references: [id])
   fakultasId       Int              @map("fakultas_id")
+  fakultas         Fakultas         @relation(fields: [fakultasId], references: [id])
   SesiMataKuliah   SesiMataKuliah[]
 
   @@map("dosen")
@@ -70,11 +61,11 @@ model Prodi {
   id         Int          @id @default(autoincrement())
   namaProdi  String       @unique @map("nama_prodi")
   singkatan  String?      @unique
-  fakultas   Fakultas     @relation(fields: [fakultasId], references: [id])
   fakultasId Int          @map("fakultas_id")
   Mahasiswa  Mahasiswa[]
-  User       User[]
   MataKuliah MataKuliah[]
+  fakultas   Fakultas     @relation(fields: [fakultasId], references: [id])
+  User       User[]
 
   @@map("prodi")
 }
@@ -94,8 +85,8 @@ model MataKuliah {
   namaMataKuliah    String              @map("nama_mata_kuliah")
   kodeMataKuliah    String              @map("kode_mata_kuliah")
   sks               Int
-  prodi             Prodi               @relation(fields: [prodiId], references: [id])
   prodiId           Int                 @map("prodi_id")
+  prodi             Prodi               @relation(fields: [prodiId], references: [id])
   PeriodeMataKuliah PeriodeMataKuliah[]
 
   @@map("mata_kuliah")
@@ -103,10 +94,10 @@ model MataKuliah {
 
 model PeriodeMataKuliah {
   id             Int              @id @default(autoincrement())
-  periode        Periode          @relation(fields: [periodeId], references: [id])
   periodeId      Int              @map("periode_id")
-  mataKuliah     MataKuliah       @relation(fields: [mataKuliahId], references: [id])
   mataKuliahId   Int              @map("mata_kuliah_id")
+  mataKuliah     MataKuliah       @relation(fields: [mataKuliahId], references: [id])
+  periode        Periode          @relation(fields: [periodeId], references: [id])
   SesiMataKuliah SesiMataKuliah[]
 
   @@map("periode_mata_kuliah")
@@ -114,57 +105,53 @@ model PeriodeMataKuliah {
 
 model SesiMataKuliah {
   id                  Int                  @id @default(autoincrement())
-  periodeMataKuliah   PeriodeMataKuliah    @relation(fields: [periodeMataKuliahId], references: [id])
   periodeMataKuliahId Int                  @map("periode_mata_kuliah_id")
   kodeSesi            String               @map("kode_sesi")
   jadwal              String
-  // dosen               Dosen                @relation(fields: [nip], references: [nip])
-  // nip                 String               @map("nip")
-  Pengantar           Pengantar?
-  Pertemuan           Pertemuan[]
+  nip                 String               @map("nip")
   MataKuliahDiajukan  MataKuliahDiajukan[]
   MataKuliahDiambil   MataKuliahDiambil[]
+  Pengantar           Pengantar?
+  Pertemuan           Pertemuan[]
   Presensi            Presensi[]
-  // dosen can have many sesi mata kuliah
   dosen               Dosen                @relation(fields: [nip], references: [nip])
-  nip                 String               @map("nip")
+  periodeMataKuliah   PeriodeMataKuliah    @relation(fields: [periodeMataKuliahId], references: [id])
 
   @@map("sesi_mata_kuliah")
 }
 
 model Pengantar {
   id               Int              @id @default(autoincrement())
-  sesiMataKuliah   SesiMataKuliah   @relation(fields: [sesiMataKuliahId], references: [id])
   sesiMataKuliahId Int              @unique @map("sesi_mata_kuliah_id")
   deskripsi        String?
   file             String?
   link             String?
   video            String?
-  Rps              Rps[]
   createdAt        DateTime         @default(now()) @map("created_at")
   updatedAt        DateTime         @updatedAt @map("updated_at")
   Group            Group[]
   ModulPengantar   ModulPengantar[]
+  sesiMataKuliah   SesiMataKuliah   @relation(fields: [sesiMataKuliahId], references: [id])
+  Rps              Rps[]
 
   @@map("pengantar")
 }
 
 model Rps {
   id          Int       @id @default(autoincrement())
-  pengantar   Pengantar @relation(fields: [pengantarId], references: [id])
   pengantarId Int       @map("pengantar_id")
   file        String?
   link        String?
   deskripsi   String?
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")
+  pengantar   Pengantar @relation(fields: [pengantarId], references: [id])
 
   @@map("rps")
 }
 
 model ModulPengantar {
   id          Int       @id @default(autoincrement())
-  pengantar   Pengantar @relation(fields: [pengantarId], references: [id])
   pengantarId Int       @map("pengantar_id")
   judul       String
   deskripsi   String?
@@ -172,86 +159,73 @@ model ModulPengantar {
   file        String?
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")
+  pengantar   Pengantar @relation(fields: [pengantarId], references: [id])
 
   @@map("modul_pengantar")
 }
 
 model Group {
   id          Int       @id @default(autoincrement())
-  pengantar   Pengantar @relation(fields: [pengantarId], references: [id])
   pengantarId Int       @map("pengantar_id")
   deskripsi   String
   link        String
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")
+  pengantar   Pengantar @relation(fields: [pengantarId], references: [id])
 
   @@map("group")
 }
 
 model Pertemuan {
   id               Int            @id @default(autoincrement())
-  sesiMataKuliah   SesiMataKuliah @relation(fields: [sesiMataKuliahId], references: [id])
   sesiMataKuliahId Int            @map("sesi_mata_kuliah_id")
   pertemuanKe      Int            @map("pertemuan_ke")
   tanggalPertemuan DateTime?      @map("tanggal_pertemuan")
-  Tugas            Tugas[]
   BahanAjar        BahanAjar[]
+  sesiMataKuliah   SesiMataKuliah @relation(fields: [sesiMataKuliahId], references: [id])
   Presensi         Presensi?
+  Tugas            Tugas[]
 
   @@map("pertemuan")
 }
 
-enum statusMataKuliahDiajukan {
-  pending
-  diterima
-  ditolak
-}
-
 model MataKuliahDiajukan {
   id               Int                      @id @default(autoincrement())
-  sesiMataKuliah   SesiMataKuliah           @relation(fields: [sesiMataKuliahId], references: [id])
   sesiMataKuliahId Int                      @map("sesi_mata_kuliah_id")
-  mahasiswa        Mahasiswa                @relation(fields: [nim], references: [nim])
   nim              String
   status           statusMataKuliahDiajukan @default(pending)
+  mahasiswa        Mahasiswa                @relation(fields: [nim], references: [nim])
+  sesiMataKuliah   SesiMataKuliah           @relation(fields: [sesiMataKuliahId], references: [id])
 
   @@map("mata_kuliah_diajukan")
 }
 
 model MataKuliahDiambil {
   id               Int            @id @default(autoincrement())
-  sesiMataKuliah   SesiMataKuliah @relation(fields: [sesiMataKuliahId], references: [id])
   sesiMataKuliahId Int            @map("sesi_mata_kuliah_id")
-  mahasiswa        Mahasiswa      @relation(fields: [nim], references: [nim])
   nim              String
+  mahasiswa        Mahasiswa      @relation(fields: [nim], references: [nim])
+  sesiMataKuliah   SesiMataKuliah @relation(fields: [sesiMataKuliahId], references: [id])
 
   @@map("mata_kuliah_diambil")
 }
 
 model Tugas {
   id                 Int              @id @default(autoincrement())
-  pertemuan          Pertemuan        @relation(fields: [pertemuanId], references: [id])
   pertemuanId        Int              @map("pertemuan_id")
   file               String?
   link               String?
   deskripsi          String?
   tanggalPengumpulan DateTime
+  pertemuan          Pertemuan        @relation(fields: [pertemuanId], references: [id])
   TugasMahasiswa     TugasMahasiswa[]
 
   @@map("tugas")
 }
 
-enum TugasStatus {
-  pending
-  diterima
-  ditolak
-}
-
 model TugasMahasiswa {
   id            Int         @id @default(autoincrement())
-  tugas         Tugas       @relation(fields: [tugasId], references: [id])
   tugasId       Int         @map("tugas_id")
-  mahasiswa     Mahasiswa   @relation(fields: [nim], references: [nim])
   nim           String
   file          String?
   link          String?
@@ -261,38 +235,73 @@ model TugasMahasiswa {
   alasanTolak   String?     @map("alasan_tolak")
   tanggalProses DateTime?   @map("tanggal_proses")
   nilai         Float?      @map("nilai")
+  mahasiswa     Mahasiswa   @relation(fields: [nim], references: [nim])
+  tugas         Tugas       @relation(fields: [tugasId], references: [id])
 
   @@map("tugas_mahasiswa")
 }
 
 model BahanAjar {
   id          Int       @id @default(autoincrement())
-  pertemuan   Pertemuan @relation(fields: [pertemuanId], references: [id])
   pertemuanId Int       @map("pertemuan_id")
   file        String?
   link        String?
   judul       String
   video       String?
+  pertemuan   Pertemuan @relation(fields: [pertemuanId], references: [id])
 
   @@map("bahan_ajar")
+}
+
+model Presensi {
+  id                Int                 @id @default(autoincrement())
+  pertemuanId       Int                 @unique @map("pertemuan_id")
+  jenisAbsensi      JenisAbsensi        @map("jenis_absensi")
+  limitWaktu        DateTime?           @map("limit_waktu")
+  sesiMataKuliahId  Int                 @map("sesi_mata_kuliah_id")
+  pertemuan         Pertemuan           @relation(fields: [pertemuanId], references: [id])
+  sesiMataKuliah    SesiMataKuliah      @relation(fields: [sesiMataKuliahId], references: [id])
+  PresensiMahasiswa PresensiMahasiswa[]
+
+  @@map("presensi")
+}
+
+model PresensiMahasiswa {
+  id              Int                     @id @default(autoincrement())
+  presensiId      Int                     @map("presensi_id")
+  nim             String                  @map("nim")
+  statusKehadiran StatusKehadiran         @map("status_kehadiran")
+  catatan         String?
+  jamMasuk        DateTime?               @map("jam_masuk")
+  statusPresensi  StatusPresensiMahasiswa @default(pending) @map("status_presensi")
+  alasanTolak     String?                 @map("alasan_tolak")
+  mahasiswa       Mahasiswa               @relation(fields: [nim], references: [nim])
+  presensi        Presensi                @relation(fields: [presensiId], references: [id])
+
+  @@map("presensi_mahasiswa")
+}
+
+enum Role {
+  ADMIN
+  MAHASISWA
+  DOSEN
+}
+
+enum statusMataKuliahDiajukan {
+  pending
+  diterima
+  ditolak
+}
+
+enum TugasStatus {
+  pending
+  diterima
+  ditolak
 }
 
 enum JenisAbsensi {
   daring
   luring
-}
-
-model Presensi {
-  id                Int                 @id @default(autoincrement())
-  sesiMataKuliah    SesiMataKuliah      @relation(fields: [sesiMataKuliahId], references: [id])
-  sesiMataKuliahId  Int                 @map("sesi_mata_kuliah_id")
-  pertemuan         Pertemuan           @relation(fields: [pertemuanId], references: [id])
-  pertemuanId       Int                 @unique @map("pertemuan_id")
-  jenisAbsensi      JenisAbsensi        @map("jenis_absensi")
-  limitWaktu        DateTime?           @map("limit_waktu")
-  PresensiMahasiswa PresensiMahasiswa[]
-
-  @@map("presensi")
 }
 
 enum StatusKehadiran {
@@ -304,19 +313,4 @@ enum StatusPresensiMahasiswa {
   pending
   diterima
   ditolak
-}
-
-model PresensiMahasiswa {
-  id              Int                     @id @default(autoincrement())
-  presensi        Presensi                @relation(fields: [presensiId], references: [id])
-  presensiId      Int                     @map("presensi_id")
-  mahasiswa       Mahasiswa               @relation(fields: [nim], references: [nim])
-  nim             String                  @map("nim")
-  statusKehadiran StatusKehadiran         @map("status_kehadiran")
-  catatan         String?
-  jamMasuk        DateTime?               @map("jam_masuk")
-  statusPresensi  StatusPresensiMahasiswa @default(pending) @map("status_presensi")
-  alasanTolak     String?                 @map("alasan_tolak")
-
-  @@map("presensi_mahasiswa")
 }
