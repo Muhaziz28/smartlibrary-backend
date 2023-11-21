@@ -8,7 +8,7 @@ export class MahasiswaDto {
     nama: string;
 
     @IsString()
-    @IsEmail()
+    @IsOptional()
     email: string;
 
     @IsString()
